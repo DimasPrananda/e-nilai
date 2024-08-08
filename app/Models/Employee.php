@@ -42,4 +42,9 @@ class Employee extends Model
     {
         return $this->belongsTo(Golongan::class);
     }
+
+    public function scores()
+    {
+        return $this->hasMany(Score::class);
+    }
 }

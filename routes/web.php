@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ScoreController;
 use App\Http\Controllers\PeriodController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CriteriaController;
@@ -88,6 +89,11 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::delete('admin/periods/{period}', [PeriodController::class, 'destroy'])->name('admin.periods.destroy');
 });
 
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/penilaian/assessments', [ScoreController::class, 'index'])->name('admin.penilaian.assessments');
+    Route::get('/admin/penilaian/scores/{employee}', [ScoreController::class, 'edit'])->name('admin.penilaian.scores');
+    Route::post('/admin/penilaian/scores/{employee}', [ScoreController::class, 'store'])->name('admin.penilaian.scores.store');
+});
 
 
 Route::get('penilai/dashboard', [HomeController::class, 'penilai'])->middleware(['auth', 'penilai']);
