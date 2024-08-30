@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('periods', function (Blueprint $table) {
             $table->id();
-            $table->integer('start_year');
-            $table->integer('end_year');
+            $table->integer('period');
             $table->timestamps();
         });
     }

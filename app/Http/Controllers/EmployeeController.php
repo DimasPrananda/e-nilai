@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Period;
 use App\Models\Employee;
 use App\Models\Golongan;
 use App\Models\Position;
 use App\Models\Department;
+use App\Models\Evaluation;
+use App\Models\TotalScore;
+use App\Models\SubCriteria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -123,5 +127,51 @@ class EmployeeController extends Controller
     {
         $employee->delete();
         return redirect()->route('admin.karyawan.employees')->with('success', 'Karyawan berhasil dihapus.');
+    }
+
+    public function showSubcriteriaEvaluation($employeeId, $periodId)
+    {
+        $employee = Employee::find($employeeId);
+        $period = Period::find($periodId);
+        $subcriterias = SubCriteria::with('criteria')->get()->groupBy('criteria.name');
+
+        return view('admin.penilaian.evaluate', compact('employee', 'period', 'subcriterias'));
+    }
+
+    public function storeSubcriteriaEvaluation(Request $request, $employeeId, $periodId)
+    {
+        $request->validate([
+            'scores' => 'required|array', // Memastikan 'scores' adalah array
+            'scores.*' => 'required|numeric|min:0|max:100' // Validasi nilai setiap subkriteria
+        ]);
+    
+        $totalScore = 0;
+    
+        foreach ($request->scores as $subcriteriaId => $score) {
+            // Simpan setiap penilaian subkriteria
+            $evaluation = Evaluation::updateOrCreate(
+                [
+                    'employee_id' => $employeeId,
+                    'period_id' => $periodId,
+                    'subcriteria_id' => $subcriteriaId
+                ],
+                ['score' => $score]
+            );
+    
+            // Tambahkan skor ke total
+            $totalScore += $score;
+        }
+    
+        // Simpan atau update total skor ke tabel total_scores
+        TotalScore::updateOrCreate(
+            [
+                'employee_id' => $employeeId,
+                'period_id' => $periodId
+            ],
+            ['total_score' => $totalScore]
+        );
+    
+        return redirect()->route('periods.showEmployee', ['period_id' => $periodId])
+            ->with('success', 'Penilaian berhasil disimpan dan total skor diperbarui.');
     }
 }

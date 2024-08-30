@@ -3,7 +3,12 @@
 <div x-data="{ 
     openSubmenu: {{ Route::is('admin.departments') || Route::is('admin.positions') || Route::is('admin.golongans') ? 'true' : 'false'}},
     openEmployeeSubmenu: {{ Route::is('admin.karyawan.employees') ? 'true' : 'false' }},
-    openEvaluationSubmenu: {{ Route::is('admin.penilaian.criterias') || Route::is('admin.penilaian.subcriterias') || Route::is('admin.penilaian.periods') || Route::is('admin.penilaian.assessments') ? 'true' : 'false' }}
+    openEvaluationSubmenu: {{ 
+    Route::is('admin.penilaian.criterias') || 
+    Route::is('admin.penilaian.subcriterias') || 
+    Route::is('admin.penilaian.periods') ||
+    Route::is('admin.penilaian.select-periods') 
+    ? 'true' : 'false' }}
 }" class="w-64 p-4 bg-gray-800 text-white flex-shrink-0">
     <nav>
         <ul>
@@ -105,7 +110,7 @@
                     </x-nav-link>    
                 </li>
                 <li>
-                    <x-nav-link :href="route('admin.penilaian.assessments')" :active="request()->routeIs('admin.penilaian.assessments')">
+                    <x-nav-link :href="route('admin.penilaian.select-periods')" :active="request()->routeIs('admin.penilaian.select-periods')">
                         Penilaian
                     </x-nav-link>    
                 </li>

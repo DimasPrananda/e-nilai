@@ -43,8 +43,13 @@ class Employee extends Model
         return $this->belongsTo(Golongan::class);
     }
 
-    public function scores()
+    public function totalScores()
     {
-        return $this->hasMany(Score::class);
+        return $this->hasOne(TotalScore::class, 'employee_id');
+    }
+
+    public function evaluations()
+    {
+        return $this->hasMany(Evaluation::class);
     }
 }

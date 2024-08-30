@@ -9,5 +9,5 @@ class Period extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['start_year', 'end_year'];
+    protected $fillable = ['period'];
 }
