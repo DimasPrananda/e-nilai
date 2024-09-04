@@ -59,6 +59,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('admin/karyawan/{employee}', [EmployeeController::class, 'show'])->name('admin.karyawan.show');
     Route::get('admin/penilaian/periode/karyawan/{employee}/evaluate/{period}/subcriteria', [EmployeeController::class, 'showSubcriteriaEvaluation'])->name('employees.subcriteriaEvaluation');
     Route::post('admin/penilaian/periode/karyawan/{employee}/evaluate/{period}/subcriteria', [EmployeeController::class, 'storeSubcriteriaEvaluation'])->name('employees.storeSubcriteriaEvaluation');
+    Route::get('admin/penilaian/periode/karyawan/{employee}/evaluate/{period}/subcriteria/edit', [EmployeeController::class, 'editScore'])->name('scores.edit');
+    Route::put('admin/penilaian/periode/karyawan/{employee}/evaluate/{period}/subcriteria', [EmployeeController::class, 'updateScore'])->name('scores.update');
+    Route::get('admin/penilaian/detail/{employee}/{period}', [EmployeeController::class, 'showDetail'])->name('scores.detail');
+
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -79,6 +83,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('admin/penilaian/periods', [PeriodController::class, 'SelectIndex'])->name('admin.penilaian.select-periods');
     Route::get('admin/penilaian/periods/select', [PeriodController::class, 'showEmployee'])->name('periods.showEmployee');
     Route::post('admin/penilaian/periods/select', [PeriodController::class, 'showEmployee'])->name('periods.showEmployee');
+    Route::delete('admin/penilaian/periods/select/{employeeId}/{periodId}', [PeriodController::class, 'deleteScore'])->name('scores.delete');
     Route::post('admin/periods', [PeriodController::class, 'store'])->name('admin.periods.store');
     Route::delete('admin/periods/{period}', [PeriodController::class, 'destroy'])->name('admin.periods.destroy');
 });

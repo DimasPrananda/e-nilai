@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Period;
+use App\Models\Criteria;
 use App\Models\Employee;
 use App\Models\Golongan;
 use App\Models\Position;
@@ -173,5 +174,73 @@ class EmployeeController extends Controller
     
         return redirect()->route('periods.showEmployee', ['period_id' => $periodId])
             ->with('success', 'Penilaian berhasil disimpan dan total skor diperbarui.');
+    }
+
+    public function editScore($employeeId, $periodId)
+    {
+        $employee = Employee::find($employeeId);
+        $period = Period::find($periodId);
+
+        if (!$employee || !$period) {
+            return redirect()->route('periods.showEmployee', ['period_id' => $periodId])
+                            ->with('error', 'Karyawan atau periode tidak ditemukan.');
+        }
+
+        $subcriterias = SubCriteria::all(); // Mendapatkan semua subkriteria
+        $scores = Evaluation::where('employee_id', $employeeId)
+                    ->where('period_id', $periodId)
+                    ->pluck('score', 'subcriteria_id'); // Mendapatkan skor saat ini
+
+        return view('admin.penilaian.edit', compact('employee', 'period', 'subcriterias', 'scores'));
+    }
+
+    public function updateScore(Request $request, $employeeId, $periodId)
+    {
+        $validated = $request->validate([
+            'scores' => 'required|array',
+            'scores.*' => 'required|numeric|min:0',
+        ]);
+
+        foreach ($validated['scores'] as $subcriteriaId => $score) {
+            Evaluation::updateOrCreate(
+                ['employee_id' => $employeeId, 'period_id' => $periodId, 'subcriteria_id' => $subcriteriaId],
+                ['score' => $score]
+            );
+        }
+
+        // Update total score
+        $totalScore = Evaluation::where('employee_id', $employeeId)
+                                ->where('period_id', $periodId)
+                                ->sum('score');
+
+        TotalScore::updateOrCreate(
+            ['employee_id' => $employeeId, 'period_id' => $periodId],
+            ['total_score' => $totalScore]
+        );
+
+        return redirect()->route('periods.showEmployee', ['period_id' => $periodId])
+                        ->with('success', 'Nilai berhasil diperbarui.');
+    }
+
+    public function showDetail($employeeId, $periodId)
+    {
+        $employee = Employee::find($employeeId);
+        $period = Period::find($periodId);
+
+        if (!$employee || !$period) {
+            return redirect()->route('periods.showEmployee', ['period_id' => $periodId])
+                            ->with('error', 'Karyawan atau periode tidak ditemukan.');
+        }
+
+        // Mendapatkan semua kriteria dan subkriteria
+        $criterias = Criteria::with('subcriterias')->get();
+
+        // Mendapatkan nilai evaluasi
+        $scores = Evaluation::where('employee_id', $employeeId)
+                    ->where('period_id', $periodId)
+                    ->pluck('score', 'subcriteria_id')
+                    ->toArray();
+
+        return view('admin.penilaian.detail', compact('employee', 'period', 'criterias', 'scores'));    
     }
 }

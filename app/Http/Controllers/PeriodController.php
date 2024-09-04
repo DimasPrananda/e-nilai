@@ -7,6 +7,7 @@ use App\Models\Employee;
 use App\Models\Department;
 use App\Models\Evaluation;
 use Illuminate\Http\Request;
+use App\Models\TotalScore;
 
 class PeriodController extends Controller
 {
@@ -93,12 +94,15 @@ class PeriodController extends Controller
     public function showEmployee(Request $request)
     {
         $periodId = $request->input('period_id');
-        $departmentId = $request->input('department_id') ?? Department::first()->id;
+        $departmentId = $request->input('department_id') ?? session('last_department_id', Department::first()->id);
+        $search = $request->input('search');
         $selectedPeriod = Period::find($periodId);
 
         if (!$selectedPeriod) {
             abort(404, 'Period not found');
         }
+
+        session(['last_department_id' => $departmentId]);
 
         // Mengambil daftar karyawan yang sudah dinilai di periode yang dipilih
         $assessedEmployees = Employee::whereHas('totalScores', function($query) use ($periodId) {
@@ -115,6 +119,11 @@ class PeriodController extends Controller
             $assessedEmployees->where('department_id', $departmentId);
             $unassessedEmployees->where('department_id', $departmentId);
         }
+
+        if ($search) {
+            $assessedEmployees->where('name', 'like', '%' . $search . '%');
+            $unassessedEmployees->where('name', 'like', '%' . $search . '%');
+        }    
 
         // Mengambil data karyawan yang sudah dinilai
         $assessedEmployees = $assessedEmployees->get();
@@ -147,6 +156,35 @@ class PeriodController extends Controller
             $departmentTotalScore = $totalDepartmentScores[$employee->department_id];
             $employee->relativeScore = $departmentTotalScore > 0 ? ($employee->totalScore / $departmentTotalScore) * 100 : 0;
         }
+
+        $assessedEmployees = $assessedEmployees->sortByDesc('totalScore');
+
+        $assessedEmployees = $assessedEmployees->values(); // Reset keys setelah sort
+        foreach ($assessedEmployees as $index => $employee) {
+            $employee->index = $index + 1; // Set nomor urut mulai dari 1
+        }
+
         return view('admin.penilaian.table', compact('assessedEmployees', 'unassessedEmployees', 'selectedPeriod', 'departments', 'departmentId'));
+    }
+
+    public function deleteScore($employeeId, $periodId)
+    {
+        // Find and delete all scores for the employee in the given period
+        $deleted = Evaluation::where('employee_id', $employeeId)
+                    ->where('period_id', $periodId)
+                    ->delete();
+
+        if ($deleted) {
+            // Also delete total score record if necessary
+            TotalScore::where('employee_id', $employeeId)
+                    ->where('period_id', $periodId)
+                    ->delete();
+
+            return redirect()->route('periods.showEmployee', ['period_id' => $periodId])
+                            ->with('success', 'Nilai berhasil dihapus.');
+        } else {
+            return redirect()->route('periods.showEmployee', ['period_id' => $periodId])
+                            ->with('error', 'Gagal menghapus nilai.');
+        }
     }
 }

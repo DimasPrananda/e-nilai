@@ -7,7 +7,6 @@
                     @csrf
                     @foreach($subcriterias as $criteriaName => $criteriaSubcriterias)
                         <div class="mb-6 border-b border-gray-300 dark:border-gray-600">
-                            <!-- Tampilkan nama kriteria -->
                             <h2 class="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">{{ $criteriaName }}</h2>
                             @foreach($criteriaSubcriterias as $subcriteria)
                                 <div class="mb-4">
