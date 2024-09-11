@@ -11,7 +11,10 @@ use App\Http\Controllers\PositionController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\SubCriteriaController;
+use App\Http\Controllers\BestEmployeeController;
 use App\Http\Controllers\SelectPeriodController;
+use App\Http\Controllers\RankingCriteriaController;
+use App\Http\Controllers\RankingSubcriteriaController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -87,6 +90,30 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('admin/periods', [PeriodController::class, 'store'])->name('admin.periods.store');
     Route::delete('admin/periods/{period}', [PeriodController::class, 'destroy'])->name('admin.periods.destroy');
 });
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('admin/ranking/criterias', [RankingCriteriaController::class, 'index'])->name('admin.ranking.criterias');
+    Route::post('admin/ranking/criterias', [RankingCriteriaController::class, 'store'])->name('ranking_criterias.store');
+    Route::get('admin/ranking/criterias/calculate', [RankingCriteriaController::class, 'calculate'])->name('criterias.calculate');
+    Route::delete('admin/ranking/criterias/{id}', [RankingCriteriaController::class, 'destroy'])->name('ranking_criterias.destroy');
+});
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('admin/ranking/subcriterias', [RankingSubcriteriaController::class, 'index'])->name('admin.ranking.subcriterias');
+    Route::post('admin/ranking/subcriterias', [RankingSubcriteriaController::class, 'store'])->name('ranking_subcriteria.store');
+    Route::delete('admin/ranking/subcriterias/{ranking_subcriteria}', [RankingSubcriteriaController::class, 'destroy'])->name('subcriteria.destroy');
+});
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('admin/ranking/best-employees', [BestEmployeeController::class, 'index'])->name('admin.ranking.select-periods');
+    Route::get('admin/ranking/best-employees/table', [BestEmployeeController::class, 'show'])->name('bestEmployees.show');
+});
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('admin/ranking/penilaian', [BestEmployeeController::class, 'create'])->name('penilaian.create');
+    Route::post('admin/ranking/penilaian', [BestEmployeeController::class, 'store'])->name('penilaian.store');
+});
+
 
 Route::get('penilai/dashboard', [HomeController::class, 'penilai'])->middleware(['auth', 'penilai']);
 

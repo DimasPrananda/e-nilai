@@ -8,6 +8,11 @@
     Route::is('admin.penilaian.subcriterias') || 
     Route::is('admin.penilaian.periods') ||
     Route::is('admin.penilaian.select-periods') 
+    ? 'true' : 'false' }},
+    openRankingSubmenu: {{ 
+    Route::is('admin.ranking.criterias') || 
+    Route::is('admin.ranking.subcriterias') ||
+    Route::is('admin.ranking.select-periods')
     ? 'true' : 'false' }}
 }" class="w-64 p-4 bg-gray-800 text-white flex-shrink-0">
     <nav>
@@ -111,6 +116,38 @@
                 </li>
                 <li>
                     <x-nav-link :href="route('admin.penilaian.select-periods')" :active="request()->routeIs('admin.penilaian.select-periods')">
+                        Penilaian
+                    </x-nav-link>    
+                </li>
+            </ul>
+
+            <li class="px-4 py-2 hover:bg-gray-700" @click="openRankingSubmenu = !openRankingSubmenu">
+                <div class="flex items-center cursor-pointer">
+                    <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-3.32 0-6 2.68-6 6v2h12v-2c0-3.32-2.68-6-6-6zm6-4c0 3.31-2.69 6-6 6s-6-2.69-6-6S8.69 4 12 4s6 2.69 6 6z"/>
+                    </svg>
+                    <span class="flex-1">Karyawan Terbaik</span>
+                    <svg :class="{ 'rotate-180': openRankingSubmenu, 'transition-transform': true }" class="w-4 h-4 fill-current text-gray-300 ml-2 transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                        <path d="M5.293 7.293a1 1 0 011.414 0L10 9.586l3.293-2.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                    </svg>
+                </div>
+            </li>
+
+            <!-- Submenu Karyawan -->
+            <ul x-show="openRankingSubmenu" x-cloak class=" pl-8 relative">
+                <div class="absolute inset-y-0 w-1 border-l-2 border-dashed border-gray-300 dark:border-gray-600"></div>
+                <li>
+                    <x-nav-link :href="route('admin.ranking.criterias')" :active="request()->routeIs('admin.ranking.criterias')">
+                        Kriteria
+                    </x-nav-link>    
+                </li>
+                <li>
+                    <x-nav-link :href="route('admin.ranking.subcriterias')" :active="request()->routeIs('admin.ranking.subcriterias')">
+                        SubKriteria
+                    </x-nav-link>    
+                </li>
+                <li>
+                    <x-nav-link :href="route('admin.ranking.select-periods')" :active="request()->routeIs('admin.ranking.select-periods')">
                         Penilaian
                     </x-nav-link>    
                 </li>
