@@ -47,6 +47,11 @@ class Employee extends Model
     {
         return $this->hasOne(TotalScore::class, 'employee_id');
     }
+    
+    public function RankingTotalScores()
+    {
+        return $this->hasOne(RankingTotalScore::class, 'employee_id');
+    }
 
     public function evaluations()
     {

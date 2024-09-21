@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('total_scores', function (Blueprint $table) {
+        Schema::create('ranking_evaluations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');
-            $table->foreignId('period_id')->constrained('periods')->onDelete('cascade');
-            $table->decimal('total_score', 8, 4)->default(0);
+            $table->foreignId('employee_id')->constrained('employees');
+            $table->foreignId('subcriteria_id')->constrained('ranking_subcriterias');
+            $table->foreignId('period_id')->constrained('periods');
+            $table->integer('score');
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('total_scores');
+        Schema::dropIfExists('ranking_evaluations');
     }
 };
