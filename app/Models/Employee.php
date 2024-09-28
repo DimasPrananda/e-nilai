@@ -57,4 +57,9 @@ class Employee extends Model
     {
         return $this->hasMany(Evaluation::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

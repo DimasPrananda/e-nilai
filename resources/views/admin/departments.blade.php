@@ -6,7 +6,7 @@
     </x-slot> --}}
 
     <div class="flex-1 flex">
-        <div class="p-12 flex-1">
+        <div class="p-12 flex-1" x-data="{ open: false }">
             <div class="container mx-auto p-4">
                 @if(session('success'))
                 <div class="bg-green-500 text-white p-4 rounded mb-4">
@@ -15,8 +15,14 @@
                 @endif
 
                 <h1 class="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">Input Data Departemen</h1>
+                
+                <!-- Tombol untuk toggle form input departemen -->
+                <button @click="open = !open" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">
+                    <span x-text="open ? 'Sembunyikan Formulir' : 'Tampilkan Formulir'"></span>
+                </button>
+
                 <!-- Formulir Input Departemen -->
-                <form action="{{ route('departments.store') }}" method="POST">
+                <form action="{{ route('departments.store') }}" method="POST" x-show="open" x-transition>
                     @csrf
                     <div class="mb-4">
                         <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nama Departemen:</label>
@@ -26,21 +32,21 @@
                 </form>
             
                 <!-- Tabel Data Departemen -->
-                <h2 class="text-2xl font-bold mt-8 text-gray-800 dark:text-gray-200">Data Departemen</h2>
-                <table class="min-w-full bg-white dark:bg-gray-800 border-gray-300 border shadow-sm mt-4">
-                    <thead>
+                <h2 class="text-2xl font-bold mt-4 text-gray-800 dark:text-gray-200">Data Departemen</h2>
+                <table class="min-w-full mt-4">
+                    <thead class="border border-b-0 bg-gray-100 dark:bg-gray-800">
                         <tr>
-                            <th class="px-6 py-3 border-b-2 border-gray-300 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">ID</th>
-                            <th class="px-6 py-3 border-b-2 border-gray-300 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">Nama Departemen</th>
-                            <th class="px-6 py-3 border-b-2 border-gray-300 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">Aksi</th>
+                            <th class="py-3 w-12 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">No</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">Nama Departemen</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="border border-t-0 bg-white dark:bg-gray-900">
                         @forelse($departments as $index => $department)
-                        <tr>
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300 dark:border-gray-600 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">{{ $index + 1 }}</td>
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300 dark:border-gray-600 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">{{ $department->name }}</td>
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300 dark:border-gray-600 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">
+                        <tr class="border-b border-gray-200 dark:border-gray-700 last:border-b-0 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200">
+                            <td class="py-4 whitespace-no-wrap border-r border-gray-300 dark:border-gray-700 text-center text-sm font-medium text-gray-700 dark:text-gray-300">{{ $index + 1 }} .</td>
+                            <td class="px-6 py-4 whitespace-no-wrap border-r border-gray-300 dark:border-gray-700 text-center text-sm font-medium text-gray-700 dark:text-gray-300">{{ $department->name }}</td>
+                            <td class="px-6 py-4 whitespace-no-wrap border-gray-300 dark:border-gray-700 text-center text-sm font-medium text-gray-700 dark:text-gray-300">
                                 <form action="{{ route('departments.destroy', $department->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this department?');">
                                     @csrf
                                     @method('DELETE')

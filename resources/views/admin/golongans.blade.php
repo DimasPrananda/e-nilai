@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="flex-1 flex">
-        <div class="p-12 flex-1">
+        <div class="p-12 flex-1" x-data="{ open: false }">
             <div class="container mx-auto p-4">
                 @if(session('success'))
                 <div class="bg-green-500 text-white p-4 rounded mb-4">
@@ -10,8 +10,13 @@
 
                 <h1 class="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">Input Data Golongan</h1>
 
+                <!-- Tombol untuk toggle form input golongan -->
+                <button @click="open = !open" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">
+                    <span x-text="open ? 'Sembunyikan Formulir' : 'Tampilkan Formulir'"></span>
+                </button>
+
                 <!-- Formulir Input Golongan -->
-                <form action="{{ route('golongan.store') }}" method="POST">
+                <form action="{{ route('golongan.store') }}" method="POST" x-show="open" x-transition>
                     @csrf
                     <div class="mb-4">
                         <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nama Golongan:</label>
@@ -32,9 +37,8 @@
                 </form>
 
                 <!-- Filter Form -->
-                <div class="mt-8 mb-4">
+                <div class="mt-4 mb-4">
                     <form method="GET" action="{{ route('admin.golongans') }}">
-                        <label for="filter_position_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Filter Jabatan:</label>
                         <select id="filter_position_id" name="position_id" class="block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-800 dark:text-gray-200" onchange="this.form.submit()">
                             <option value="">Semua Jabatan</option>
                             @foreach($positions as $position)
@@ -48,22 +52,22 @@
 
                 <!-- Tabel Data Golongan -->
                 <h2 class="text-2xl font-bold mt-8 text-gray-800 dark:text-gray-200">Data Golongan</h2>
-                <table class="min-w-full bg-white dark:bg-gray-800 border-gray-300 border shadow-sm mt-4">
-                    <thead>
+                <table class="min-w-full mt-4">
+                    <thead class="border border-b-0 bg-gray-100 dark:bg-gray-800">
                         <tr>
-                            <th class="px-6 py-3 border-b-2 border-gray-300 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">No</th>
-                            <th class="px-6 py-3 border-b-2 border-gray-300 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">Nama Golongan</th>
-                            <th class="px-6 py-3 border-b-2 border-gray-300 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">Jabatan</th>
-                            <th class="px-6 py-3 border-b-2 border-gray-300 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">Aksi</th>
+                            <th class="py-3 w-12 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">No</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">Nama Golongan</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">Jabatan</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="border border-t-0 bg-white dark:bg-gray-900">
                         @forelse($golongans as $index => $golongan)
-                        <tr>
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300 dark:border-gray-600 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">{{ $index + 1 }}</td>
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300 dark:border-gray-600 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">{{ $golongan->name }}</td>
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300 dark:border-gray-600 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">{{ $golongan->position->name }}</td>
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300 dark:border-gray-600 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">
+                        <tr class="border-b border-gray-200 dark:border-gray-700 last:border-b-0 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200">
+                            <td class="py-3 w-12 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">{{ $index + 1 }} .</td>
+                            <td class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">{{ $golongan->name }}</td>
+                            <td class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">{{ $golongan->position->name }}</td>
+                            <td class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">
                                 <form action="{{ route('golongan.destroy', $golongan->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this golongan?');">
                                     @csrf
                                     @method('DELETE')

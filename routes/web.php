@@ -60,12 +60,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::put('admin/karyawan/{employee}', [EmployeeController::class, 'update'])->name('admin.karyawan.update');
     Route::delete('admin/karyawan/{employee}', [EmployeeController::class, 'destroy'])->name('admin.karyawan.destroy');
     Route::get('admin/karyawan/{employee}', [EmployeeController::class, 'show'])->name('admin.karyawan.show');
-    Route::get('admin/penilaian/periode/karyawan/{employee}/evaluate/{period}/subcriteria', [EmployeeController::class, 'showSubcriteriaEvaluation'])->name('employees.subcriteriaEvaluation');
-    Route::post('admin/penilaian/periode/karyawan/{employee}/evaluate/{period}/subcriteria', [EmployeeController::class, 'storeSubcriteriaEvaluation'])->name('employees.storeSubcriteriaEvaluation');
-    Route::get('admin/penilaian/periode/karyawan/{employee}/evaluate/{period}/subcriteria/edit', [EmployeeController::class, 'editScore'])->name('scores.edit');
-    Route::put('admin/penilaian/periode/karyawan/{employee}/evaluate/{period}/subcriteria', [EmployeeController::class, 'updateScore'])->name('scores.update');
-    Route::get('admin/penilaian/detail/{employee}/{period}', [EmployeeController::class, 'showDetail'])->name('scores.detail');
-
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -83,10 +77,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('admin/periods', [PeriodController::class, 'index'])->name('admin.penilaian.periods');
     Route::get('admin/periods/create', [PeriodController::class, 'create'])->name('admin.periods.create');
-    Route::get('admin/penilaian/periods', [PeriodController::class, 'SelectIndex'])->name('admin.penilaian.select-periods');
-    Route::get('admin/penilaian/periods/select', [PeriodController::class, 'showEmployee'])->name('periods.showEmployee');
-    Route::post('admin/penilaian/periods/select', [PeriodController::class, 'showEmployee'])->name('periods.showEmployee');
-    Route::delete('admin/penilaian/periods/select/{employeeId}/{periodId}', [PeriodController::class, 'deleteScore'])->name('scores.delete');
     Route::post('admin/periods', [PeriodController::class, 'store'])->name('admin.periods.store');
     Route::delete('admin/periods/{period}', [PeriodController::class, 'destroy'])->name('admin.periods.destroy');
 });
@@ -102,6 +92,18 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('admin/ranking/subcriterias', [RankingSubcriteriaController::class, 'index'])->name('admin.ranking.subcriterias');
     Route::post('admin/ranking/subcriterias', [RankingSubcriteriaController::class, 'store'])->name('ranking_subcriteria.store');
     Route::delete('admin/ranking/subcriterias/{ranking_subcriteria}', [RankingSubcriteriaController::class, 'destroy'])->name('subcriteria.destroy');
+});
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('admin/penilaian/periods', [EvaluationController::class, 'SelectIndex'])->name('admin.penilaian.select-periods');
+    Route::get('admin/penilaian/periods/select', [EvaluationController::class, 'showEmployee'])->name('periods.showEmployee');
+    Route::post('admin/penilaian/periods/select', [EvaluationController::class, 'showEmployee'])->name('periods.showEmployee');
+    Route::delete('admin/penilaian/periods/select/{employeeId}/{periodId}', [EvaluationController::class, 'deleteScore'])->name('scores.delete');
+    Route::get('admin/penilaian/periode/karyawan/{employee}/evaluate/{period}/subcriteria', [EvaluationController::class, 'showSubcriteriaEvaluation'])->name('employees.subcriteriaEvaluation');
+    Route::post('admin/penilaian/periode/karyawan/{employee}/evaluate/{period}/subcriteria', [EvaluationController::class, 'storeSubcriteriaEvaluation'])->name('employees.storeSubcriteriaEvaluation');
+    Route::get('admin/penilaian/periode/karyawan/{employee}/evaluate/{period}/subcriteria/edit', [EvaluationController::class, 'editScore'])->name('scores.edit');
+    Route::get('admin/penilaian/detail/{employee}/{period}', [EvaluationController::class, 'showDetail'])->name('scores.detail');
+    Route::put('admin/penilaian/periode/karyawan/{employee}/evaluate/{period}/subcriteria', [EvaluationController::class, 'updateScore'])->name('scores.update');
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {

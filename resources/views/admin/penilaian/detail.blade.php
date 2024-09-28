@@ -40,46 +40,54 @@
                 <!-- Detail Penilaian -->
                 <h2 class="text-xl mb-4 font-semibold text-gray-800 dark:text-gray-300">Detail Penilaian</h2>
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
-                    <table class="min-w-full border divide-y divide-gray-200 dark:divide-gray-700 border-gray-700 dark:border-gray-300">
-                        <thead>
+                    <table class="min-w-full">
+                        <thead class="border border-b-0 bg-gray-100 dark:bg-gray-800">
                             <tr>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-b border-gray-700 dark:border-gray-300">
+                                <th class="py-3 w-12 text-center text-xs font-medium border-r text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">
+                                    No
+                                </th>
+                                <th class="px-6 py-3 text-center text-xs font-medium border-r text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">
                                     Kriteria
                                 </th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-b border-gray-700 dark:border-gray-300">
+                                <th class="px-6 py-3 text-center text-xs font-medium border-r text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">
                                     Subkriteria
                                 </th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-b border-gray-700 dark:border-gray-300">
+                                <th class="px-6 py-3 text-center text-xs font-medium border-r text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">
                                     Nilai
                                 </th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-b border-gray-700 dark:border-gray-300">
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">
                                     Predikat
                                 </th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-900 dark:divide-gray-700">
+                        <tbody class="border border-t-0 border-b-0 bg-white dark:bg-gray-900 dark:divide-gray-700">
                             @php
                                 $totalScore = 0;
                             @endphp
                             @foreach($criterias as $criteria)
                                 @foreach($criteria->subcriterias as $subcriteria)
-                                    <tr>
+                                    <tr class="border-b border-gray-200 dark:border-gray-700 last:border-b-0">
                                         @if ($loop->first)
-                                            <td class="px-6 py-4 whitespace-nowrap border-r text-sm font-medium text-gray-900 dark:text-gray-100 border-b border-gray-200 dark:border-gray-700" rowspan="{{ $criteria->subcriterias->count() }}">
+                                            <td class=" py-4 whitespace-nowrap border-r text-center text-sm font-medium text-gray-900 dark:text-gray-100 border-gray-200 dark:border-gray-700" rowspan="{{ count($criteria['subcriterias']) }}">
+                                                {{ $loop->parent->iteration }} .
+                                            </td>
+                                        @endif
+                                        @if ($loop->first)
+                                            <td class="px-6 py-4 whitespace-nowrap border-r text-sm font-medium text-gray-900 dark:text-gray-100 border-gray-200 dark:border-gray-700" rowspan="{{ $criteria->subcriterias->count() }}">
                                                 {{ $criteria->name }}
                                             </td>
                                         @endif
-                                        <td class="px-6 py-4 whitespace-nowrap border-r text-sm text-gray-500 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">
+                                        <td class="px-6 py-4 whitespace-nowrap border-r text-sm text-gray-500 dark:text-gray-300 border-gray-200 dark:border-gray-700">
                                             {{ $subcriteria->detail }}
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap border-r text-center text-sm text-gray-500 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">
+                                        <td class="px-6 py-4 whitespace-nowrap border-r text-center text-sm text-gray-500 dark:text-gray-300 border-gray-200 dark:border-gray-700">
                                             @php
                                                 $score = $scores[$subcriteria->id] ?? 0;
                                                 $totalScore += $score;
                                             @endphp
                                             {{ $score }}
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">
+                                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500 dark:text-gray-300 border-gray-200 dark:border-gray-700">
                                             @php
                                                 $score = $scores[$subcriteria->id] ?? 0;
                                                 if ($score >= 80) {
@@ -100,15 +108,15 @@
                                 @endforeach
                             @endforeach
                         </tbody>
-                        <tfoot>
+                        <tfoot class="border border-t-0 border-gray-700 dark:border-gray-200 bg-gray-100 dark:bg-gray-800">
                             <tr>
-                                <td colspan="2" class="px-6 py-4 text-center text-sm font-medium text-gray-900 dark:text-gray-100 border-t border-gray-200 dark:border-gray-700">
+                                <td colspan="3" class="px-6 py-4 text-center text-sm font-medium text-gray-900 dark:text-gray-100">
                                     Total Skor
                                 </td>
-                                <td class="px-6 py-4 text-center text-sm font-medium text-gray-900 dark:text-gray-100 border-t border-gray-200 dark:border-gray-700">
+                                <td class="px-6 py-4 text-center text-sm font-medium text-gray-900 dark:text-gray-100">
                                     {{ $totalScore }}
                                 </td>
-                                <td class="px-6 py-4 text-center text-sm font-medium text-gray-900 dark:text-gray-100 border-t border-gray-200 dark:border-gray-700">
+                                <td class="px-6 py-4 text-center text-sm font-medium text-gray-900 dark:text-gray-100">
                                     <!-- Kosong karena predikat tidak dihitung pada total -->
                                 </td>
                             </tr>

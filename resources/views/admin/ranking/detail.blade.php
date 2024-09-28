@@ -40,33 +40,33 @@
                 <!-- Detail Penilaian -->
                 <h2 class="text-xl mb-4 font-semibold text-gray-800 dark:text-gray-300">Detail Penilaian</h2>
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
-                    <table class="min-w-full border divide-y divide-gray-200 dark:divide-gray-700 border-gray-700 dark:border-gray-300">
-                        <thead>
+                    <table class="min-w-full">
+                        <thead class="border border-b-0 bg-gray-100 dark:bg-gray-800">
                             <tr>
-                                <th class="px-6 py-3 w-12 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-b border-gray-700 dark:border-gray-300">
+                                <th class=" py-3 w-12 text-center text-xs font-medium border-r text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">
                                     No
                                 </th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-b border-gray-700 dark:border-gray-300">
+                                <th class="px-6 py-3 text-center text-xs font-medium border-r text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">
                                     Kriteria
                                 </th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-b border-gray-700 dark:border-gray-300">
+                                <th class="px-6 py-3 text-center text-xs font-medium border-r text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">
                                     Subkriteria
                                 </th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-b border-gray-700 dark:border-gray-300">
+                                <th class="px-6 py-3 text-center text-xs font-medium border-r text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">
                                     Nilai
                                 </th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-b border-gray-700 dark:border-gray-300">
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">
                                     Total Subkriteria
                                 </th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-900 dark:divide-gray-700">
+                        <tbody class="border border-t-0 bg-white dark:bg-gray-900 dark:divide-gray-700">
                             @foreach($criterias as $criteria)
                                 @foreach($criteria['subcriterias'] as $subcriteria)
                                     <tr>
                                         @if ($loop->first)
-                                            <td class="px-6 py-4 whitespace-nowrap border-r text-center text-sm font-medium text-gray-900 dark:text-gray-100 border-b border-gray-200 dark:border-gray-700" rowspan="{{ count($criteria['subcriterias']) }}">
-                                                {{ $loop->parent->iteration }}
+                                            <td class=" py-4 whitespace-nowrap border-r text-center text-sm font-medium text-gray-900 dark:text-gray-100 border-b border-gray-200 dark:border-gray-700" rowspan="{{ count($criteria['subcriterias']) }}">
+                                                {{ $loop->parent->iteration }} .
                                             </td>
                                         @endif
                                         @if ($loop->first)
@@ -89,15 +89,12 @@
                                 @endforeach
                             @endforeach
                         </tbody>
-                        <tfoot>
+                        <tfoot class="border border-gray-700 dark:border-gray-200">
                             <tr>
-                                <td colspan="3" class="px-6 py-4 text-center text-sm font-medium text-gray-900 dark:text-gray-100 border-t border-gray-200 dark:border-gray-700">
+                                <td colspan="4" class="px-6 py-4 text-center text-sm font-medium text-gray-900 dark:text-gray-100">
                                     Total Skor Semua Kriteria
                                 </td>
-                                <td class="px-6 py-4 text-center text-sm font-medium text-gray-900 dark:text-gray-100 border-t border-gray-200 dark:border-gray-700">
-                                    <!-- Kosong karena tidak ada total lain -->
-                                </td>
-                                <td class="px-6 py-4 text-center text-sm font-medium text-gray-900 dark:text-gray-100 border-t border-gray-200 dark:border-gray-700">
+                                <td class="px-6 py-4 text-center text-sm font-medium text-gray-900 dark:text-gray-100">
                                     {{ $totalScore }}
                                 </td>
                             </tr>
@@ -106,40 +103,38 @@
                 </div>
                 
                 <h2 class="text-xl font-bold mt-8 text-gray-800 dark:text-gray-200">Detail Evaluasi Kriteria</h2>
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
-                    <table class="min-w-full bg-white dark:bg-gray-800 border-gray-300 border shadow-sm mt-4">
-                        <thead>
-                            <tr>
-                                <th class="px-6 py-3 w-12 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-b border-gray-700 dark:border-gray-300">No</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-b border-gray-700 dark:border-gray-300">Nama Kriteria</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-b border-gray-700 dark:border-gray-300">Evaluations Factor</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-b border-gray-700 dark:border-gray-300">Factor Weight</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-b border-gray-700 dark:border-gray-300">Weight Evaluation</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-900 dark:divide-gray-700">
-                            @foreach ($criteriaDetails as $index => $criteriaDetail)
-                            <tr>
-                                <td class="px-6 py-4 whitespace-no-wrap border-r border-b border-gray-300 dark:border-gray-600 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">{{ $index + 1 }}</td>
-                                <td class="px-6 py-4 whitespace-no-wrap border-r border-b border-gray-300 dark:border-gray-600 text-left text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">{{ $criteriaDetail['name'] }}</td>
-                                <td class="px-6 py-4 whitespace-no-wrap border-r border-b border-gray-300 dark:border-gray-600 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">{{ number_format($criteriaDetail['evaluations_factor'], 2) }}</td>
-                                <td class="px-6 py-4 whitespace-no-wrap border-r border-b border-gray-300 dark:border-gray-600 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">{{ $criteriaDetail['factor_weight'] }}</td>
-                                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300 dark:border-gray-600 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">{{ number_format($criteriaDetail['weight_evaluation'], 2) }}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="3" class="px-6 py-4 text-center text-sm font-medium text-gray-900 dark:text-gray-100 border-t border-gray-200 dark:border-gray-700">
-                                    Total Hasil Bobot Evaluasi
-                                </td>
-                                <td class="px-6 py-4 text-center text-sm font-medium text-gray-900 dark:text-gray-100 border-t border-gray-200 dark:border-gray-700">
-                                    {{ number_format($totalWeightEvaluation, 2) }}
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
+                <table class="min-w-full mt-4">
+                    <thead class="border border-b-0 bg-gray-100 dark:bg-gray-800">
+                        <tr>
+                            <th class="py-3 w-12 text-center text-xs font-medium border-r text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-200 dark:border-gray-700">No</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium border-r text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-200 dark:border-gray-700">Nama Kriteria</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium border-r text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-200 dark:border-gray-700">Evaluations Factor</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium border-r text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-200 dark:border-gray-700">Factor Weight</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-200 dark:border-gray-700">Weight Evaluation</th>
+                        </tr>
+                    </thead>
+                    <tbody class="border border-t-0 border-b-0 bg-white dark:bg-gray-900 dark:divide-gray-700">                            
+                        @foreach ($criteriaDetails as $index => $criteriaDetail)
+                        <tr class="border-b border-gray-200 dark:border-gray-700 last:border-b-0 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200">
+                            <td class="py-4 whitespace-no-wrap border-r border-gray-300 dark:border-gray-600 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">{{ $index + 1 }} .</td>
+                            <td class="px-6 py-4 whitespace-no-wrap border-r border-gray-300 dark:border-gray-600 text-left text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">{{ $criteriaDetail['name'] }}</td>
+                            <td class="px-6 py-4 whitespace-no-wrap border-r border-gray-300 dark:border-gray-600 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">{{ number_format($criteriaDetail['evaluations_factor'], 2) }}</td>
+                            <td class="px-6 py-4 whitespace-no-wrap border-r border-gray-300 dark:border-gray-600 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">{{ $criteriaDetail['factor_weight'] }}</td>
+                            <td class="px-6 py-4 whitespace-no-wrap border-gray-300 dark:border-gray-600 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">{{ number_format($criteriaDetail['weight_evaluation'], 2) }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot class="border border-t-0 border-gray-700 dark:border-gray-200 bg-gray-100 dark:bg-gray-800">
+                        <tr>
+                            <td colspan="4" class="px-6 py-4 text-center text-sm font-medium text-gray-900 dark:text-gray-100">
+                                Total Hasil Bobot Evaluasi
+                            </td>
+                            <td class="px-6 py-4 text-center text-sm font-medium text-gray-900 dark:text-gray-100">
+                                {{ number_format($totalWeightEvaluation, 2) }}
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>    
             </div>
         </div>
     </div>

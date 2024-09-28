@@ -14,7 +14,7 @@
     Route::is('admin.ranking.subcriterias') ||
     Route::is('admin.ranking.select-periods')
     ? 'true' : 'false' }}
-}" class="w-64 p-4 bg-gray-800 text-white flex-shrink-0">
+}" class="fixed h-screen w-64 p-4 bg-gray-800 text-white flex-shrink-0">
     <nav>
         <ul>
             <!-- Dashboard Menu Item -->

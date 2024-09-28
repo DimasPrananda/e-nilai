@@ -26,23 +26,28 @@
 
                 <!-- Tabel Data Karyawan Belum Dinilai -->
                 <h2 class="text-xl font-bold mt-8 text-gray-800 dark:text-gray-200">Karyawan Belum Dinilai</h2>
-                <table class="min-w-full bg-white dark:bg-gray-800 border-gray-300 border shadow-sm mt-4">
-                    <thead>
+                <table class="min-w-full mt-4">
+                    <thead class=" border border-b-0 bg-gray-100 dark:bg-gray-800">
                         <tr>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-b border-gray-700 dark:border-gray-300">NO</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-b border-gray-700 dark:border-gray-300">NAMA KARYAWAN</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-b border-gray-700 dark:border-gray-300">EMAIL</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-b border-gray-700 dark:border-gray-300">AKSI</th>
+                            <th class="py-3 w-12 text-center text-xs border-r font-semibold text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">NO</th>
+                            <th class="px-6 py-3 text-center text-xs border-r font-semibold text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">NAMA KARYAWAN</th>
+                            <th class="px-6 py-3 text-center text-xs border-r font-semibold text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">Jabatan</th>
+                            <th class="px-6 py-3 text-center text-xs font-semibold text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">AKSI</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="border border-t-0 bg-white dark:bg-gray-900">
                         @forelse($unassessedEmployees as $index => $employee)
-                        <tr>
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300 dark:border-gray-600 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">{{ $index + 1 }}</td>
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300 dark:border-gray-600 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">{{ $employee->name }}</td>
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300 dark:border-gray-600 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">{{ $employee->email }}</td>
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300 dark:border-gray-600 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">
-                                <a href="{{ route('employees.subcriteriaEvaluation', ['employee' => $employee->id, 'period' => $selectedPeriod->id]) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Nilai</a>
+                        <tr class="border-b border-gray-200 dark:border-gray-700 last:border-b-0 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200">
+                            <td class="py-4 text-sm text-center border-r text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700">{{ $index + 1 }} .</td>
+                            <td class="px-6 py-4 text-sm text-left border-r text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700">{{ $employee->name }}</td>
+                            <td class="px-6 py-4 text-sm text-center border-r text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700">{{ $employee->position->name }}</td>
+                            <td class="px-6 py-4 text-sm text-center text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700">
+                                <a href="{{ route('employees.subcriteriaEvaluation', ['employee' => $employee->id, 'period' => $selectedPeriod->id]) }}" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full shadow-lg transition transform hover:-translate-y-1 hover:shadow-xl duration-200 ease-in-out flex items-center justify-center space-x-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M10 3a1 1 0 00-1 1v3.586l-.293-.293a1 1 0 00-1.414 0L5 8.586l-1.293-1.293a1 1 0 00-1.414 0l-2 2a1 1 0 000 1.414L4 13.414l1.293-1.293a1 1 0 011.414 0L8 13.414l.293-.293a1 1 0 011.414 0L10 12.586V17a1 1 0 102 0v-4.414l.293.293a1 1 0 001.414 0L15 12.586l1.293 1.293a1 1 0 001.414 0l2-2a1 1 0 000-1.414L16 8.586l-1.293 1.293a1 1 0 01-1.414 0L12 8.586l-.293.293a1 1 0 01-1.414 0L10 8.586V4a1 1 0 00-1-1z"/>
+                                    </svg>
+                                    <span>Nilai</span>
+                                </a>
                             </td>
                         </tr>
                         @empty
@@ -55,23 +60,23 @@
 
                 <!-- Tabel Data Karyawan Sudah Dinilai -->
                 <h2 class="text-xl font-bold mt-8 text-gray-800 dark:text-gray-200">Karyawan Sudah Dinilai</h2>
-                <table class="min-w-full border-t border-r border-l bg-white dark:bg-gray-800 border-gray-300 shadow-sm mt-4">
-                    <thead>
+                <table class="min-w-full mt-4">
+                    <thead class="border border-b-0 bg-gray-100 dark:bg-gray-800">
                         <tr>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-b border-gray-700 dark:border-gray-300">No</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-b border-gray-700 dark:border-gray-300">Nama Karyawan</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-b border-gray-700 dark:border-gray-300">Email</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-b border-gray-700 dark:border-gray-300">Total Nilai</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-b border-gray-700 dark:border-gray-300">Aksi</th>
+                            <th class="py-3 w-12 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">No</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">Nama Karyawan</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">Jabatan</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">Total Nilai</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="border border-t-0 bg-white dark:bg-gray-900">
                         @forelse($assessedEmployees as $index => $employee)
-                        <tr>
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300 dark:border-gray-700 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">{{ $index + 1 }}</td>
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300 dark:border-gray-700 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">{{ $employee->name }}</td>
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300 dark:border-gray-700 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">{{ $employee->email }}</td>
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300 dark:border-gray-700 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">
+                        <tr class="border-b border-gray-300 dark:border-gray-700 last:border-b-0 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200">
+                            <td class="py-4 whitespace-no-wrap text-center text-sm leading-4 font-medium border-r border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300">{{ $index + 1 }} .</td>
+                            <td class="px-6 py-4 whitespace-no-wrap text-left text-sm leading-4 font-medium border-r border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300">{{ $employee->name }}</td>
+                            <td class="px-6 py-4 whitespace-no-wrap text-center text-sm leading-4 font-medium border-r border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300">{{ $employee->position->name }}</td>
+                            <td class="px-6 py-4 whitespace-no-wrap text-center text-sm leading-4 font-medium border-r border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300">
                                 {{ number_format($employee->relativeScore, 2) ?? 'N/A' }}%
                             </td>
                             <td class="flex justify-center space-x-2 px-6 py-4 whitespace-no-wrap border-b border-gray-300 dark:border-gray-700 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">
