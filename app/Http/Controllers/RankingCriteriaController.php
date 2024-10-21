@@ -61,6 +61,31 @@ class RankingCriteriaController extends Controller
         return view('criterias.result', compact('evaluations'));
     }
 
+    public function update(Request $request)
+    {
+        // Validasi input dari formulir
+        $request->validate([
+            'id' => 'required|exists:ranking_criterias,id',
+            'name' => 'required|string|max:255',
+            'intensity' => 'required|numeric',
+            'nilai_max' => 'required|numeric',
+        ]);
+
+        // Temukan kriteria berdasarkan ID
+        $rankingCriteria = RankingCriteria::findOrFail($request->id);
+
+        // Perbarui data kriteria
+        $rankingCriteria->name = $request->name;
+        $rankingCriteria->intensity = $request->intensity;
+        $rankingCriteria->nilai_max = $request->nilai_max;
+
+        // Simpan perubahan ke database
+        $rankingCriteria->save();
+
+        // Kembali ke tampilan dengan pesan sukses
+        return redirect()->route('admin.ranking.criterias')->with('success', 'Kriteria berhasil diperbarui!');
+    }
+
     // Menghapus kriteria
     public function destroy($id)
     {

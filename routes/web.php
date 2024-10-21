@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PeriodController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CriteriaController;
 use App\Http\Controllers\EmployeeController;
@@ -12,7 +13,6 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\SubCriteriaController;
 use App\Http\Controllers\BestEmployeeController;
-use App\Http\Controllers\SelectPeriodController;
 use App\Http\Controllers\RankingCriteriaController;
 use App\Http\Controllers\RankingSubcriteriaController;
 
@@ -33,6 +33,13 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 
 Route::get('admin/dashboard', [HomeController::class, 'admin'])->middleware(['auth', 'admin'])->name('admin.dashboard');
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/comments', [CommentController::class, 'index'])->name('comments.index');
+    Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::post('/comments/{comment}/like', [CommentController::class, 'like'])->name('comments.like');
+    Route::delete('/comments', [CommentController::class, 'destroyAll'])->name('comments.destroyAll');
+});
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('admin/departments', [DepartmentController::class, 'index'])->name('admin.departments');
@@ -82,6 +89,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {
+    Route::resource('ranking_criterias', RankingCriteriaController::class);
     Route::get('admin/ranking/criterias', [RankingCriteriaController::class, 'index'])->name('admin.ranking.criterias');
     Route::post('admin/ranking/criterias', [RankingCriteriaController::class, 'store'])->name('ranking_criterias.store');
     Route::get('admin/ranking/criterias/calculate', [RankingCriteriaController::class, 'calculate'])->name('criterias.calculate');
@@ -98,6 +106,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('admin/penilaian/periods', [EvaluationController::class, 'SelectIndex'])->name('admin.penilaian.select-periods');
     Route::get('admin/penilaian/periods/select', [EvaluationController::class, 'showEmployee'])->name('periods.showEmployee');
     Route::post('admin/penilaian/periods/select', [EvaluationController::class, 'showEmployee'])->name('periods.showEmployee');
+    Route::get('admin/penilaian/latest', [EvaluationController::class, 'showLatestPeriod'])->name('admin.penilaian.latest');
     Route::delete('admin/penilaian/periods/select/{employeeId}/{periodId}', [EvaluationController::class, 'deleteScore'])->name('scores.delete');
     Route::get('admin/penilaian/periode/karyawan/{employee}/evaluate/{period}/subcriteria', [EvaluationController::class, 'showSubcriteriaEvaluation'])->name('employees.subcriteriaEvaluation');
     Route::post('admin/penilaian/periode/karyawan/{employee}/evaluate/{period}/subcriteria', [EvaluationController::class, 'storeSubcriteriaEvaluation'])->name('employees.storeSubcriteriaEvaluation');

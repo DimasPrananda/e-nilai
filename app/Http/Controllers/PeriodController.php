@@ -22,32 +22,32 @@ class PeriodController extends Controller
         return view('admin.penilaian.periods');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $request->validate([
-            'start_year' => 'required|integer|min:1900|max:2099',
-            'end_year' => 'required|integer|min:1900|max:2099',
-        ]);
-    
-        // Pastikan end_year tidak kurang dari start_year
-        if ($request->input('end_year') < $request->input('start_year')) {
-            return redirect()->back()->withErrors(['end_year' => 'End year must be greater than or equal to start year.']);
-        }
-    
-        // Gabungkan start_year dan end_year
-        $period = $request->input('start_year') . '-' . $request->input('end_year');
-    
-        Period::create(['period' => $period]);
-    
-        return redirect()->route('admin.penilaian.periods')
-                         ->with('success', 'Period successfully added.');
+    $request->validate([
+        'start_year' => 'required|integer|min:1900|max:2099',
+        'end_year' => 'required|integer|min:1900|max:2099',
+        'start_month' => 'required|string',
+        'end_month' => 'required|string',
+    ]);
+
+    // Pastikan end_year dan end_month tidak kurang dari start_year dan start_month
+    if (($request->input('end_year') < $request->input('start_year')) || 
+        ($request->input('end_year') == $request->input('start_year') && array_search($request->input('end_month'), ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']) < array_search($request->input('start_month'), ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']))) {
+        return redirect()->back()->withErrors(['end_year' => 'End period must be greater than or equal to start period.']);
     }
-    /**
-     * Display the specified resource.
-     */
+
+    // Gabungkan bulan dan tahun untuk membuat periode
+    $start_period = $request->input('start_month') . ' ' . $request->input('start_year');
+    $end_period = $request->input('end_month') . ' ' . $request->input('end_year');
+    $period = $start_period . ' - ' . $end_period;
+
+    Period::create(['period' => $period]);
+
+    return redirect()->route('admin.penilaian.periods')
+                     ->with('success', 'Period successfully added.');
+}
+
     public function show(Period $period)
     {
         //

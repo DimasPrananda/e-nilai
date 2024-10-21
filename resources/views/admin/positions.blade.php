@@ -6,10 +6,10 @@
     </x-slot> --}}
 
     <div class="flex-1 flex">
-        <div class="p-12 flex-1" x-data="{ open: false }">
-            <div class="container mx-auto p-4">
+        <div class="p-4 md:p-12 flex-1" x-data="{ open: false }">
+            <div class="">
                 @if(session('success'))
-                <div class="bg-green-500 text-white p-4 rounded mb-4">
+                <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)" class="bg-green-500 text-white p-4 rounded mb-4">
                     {{ session('success') }}
                 </div>
                 @endif

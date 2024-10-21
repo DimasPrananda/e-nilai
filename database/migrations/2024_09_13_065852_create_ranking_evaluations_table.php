@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('ranking_evaluations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('employee_id')->constrained('employees');
-            $table->foreignId('subcriteria_id')->constrained('ranking_subcriterias');
-            $table->foreignId('period_id')->constrained('periods');
+            $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');
+            $table->foreignId('subcriteria_id')->constrained('ranking_subcriterias')->onDelete('cascade');
+            $table->foreignId('period_id')->constrained('periods')->onDelete('cascade');
             $table->integer('score');
             $table->timestamps();
         });

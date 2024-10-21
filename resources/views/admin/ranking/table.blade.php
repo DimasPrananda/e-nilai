@@ -1,15 +1,15 @@
 <x-app-layout>
-    <div class="flex-1 flex">
-        <div class="p-12 flex-1">
-            <div class="container mx-auto p-4">
-                <h1 class="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">Penilaian di Periode {{ $selectedPeriod->period }}</h1>
+    <div class="p-4 md:p-12 flex-1 w-screen md:w-full">
+        <div class="container mx-auto p-4">
+            <h1 class="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">{{ $selectedPeriod->period }}</h1>
 
-                <!-- Tabel Data Karyawan Belum Dinilai -->
-                <h2 class="text-xl font-bold mt-8 text-gray-800 dark:text-gray-200">Rekomendasi Karyawan Dengan Skor Tertinggi</h2>
+            <!-- Tabel Data Karyawan Belum Dinilai -->
+            <h2 class="text-xl font-bold mt-8 text-gray-800 dark:text-gray-200">Rekomendasi Karyawan Dengan Skor Tertinggi</h2>
+            <div class=" overflow-x-auto w-full">
                 <table class="min-w-full mt-4">
                     <thead class=" border border-b-0 bg-gray-100 dark:bg-gray-800">
                         <tr>
-                            <th class="py-3 text-center text-xs border-r font-semibold text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">
+                            <th class="px-3 md:px-0 py-3 text-center text-xs border-r font-semibold text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">
                                 NO
                             </th>
                             <th class="px-6 py-3 text-center text-xs border-r font-semibold text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">
@@ -27,8 +27,8 @@
                         </tr>
                     </thead>
                     <tbody class="border border-t-0 bg-white dark:bg-gray-900">
-                        @forelse($unassessedEmployees as $department)
-                            @forelse($department->employees as $index => $employee)
+                        @foreach($unassessedEmployees as $department)
+                            @foreach($department->employees as $index => $employee)
                                 <tr class="border-b border-gray-200 dark:border-gray-700 last:border-b-0 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200">
                                     <td class="py-4 text-center text-sm border-r text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700">
                                         {{ ($loop->parent->index * $loop->count) + $loop->iteration }} .
@@ -52,29 +52,19 @@
                                         </a>
                                     </td>
                                 </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
-                                        Tidak ada karyawan yang belum dinilai di departemen ini.
-                                    </td>
-                                </tr>
-                            @endforelse
-                        @empty
-                            <tr>
-                                <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
-                                    Tidak ada karyawan yang belum dinilai di periode ini.
-                                </td>
-                            </tr>
-                        @endforelse
+                            @endforeach
+                        @endforeach
                     </tbody>
-                </table>                
+                </table>       
+            </div>             
 
-                <!-- Tabel Data Karyawan Sudah Dinilai -->
-                <h2 class="text-xl font-bold mt-8 text-gray-800 dark:text-gray-200">Karyawan Sudah Dinilai</h2>
+            <!-- Tabel Data Karyawan Sudah Dinilai -->
+            <h2 class="text-xl font-bold mt-8 text-gray-800 dark:text-gray-200">Karyawan Sudah Dinilai</h2>
+            <div class=" overflow-x-auto w-full">
                 <table class="min-w-full mt-4">
                     <thead class=" border border-b-0 bg-gray-100 dark:bg-gray-800">
                         <tr>
-                            <th class="py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">No</th>
+                            <th class="px-3 md:px-0 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">No</th>
                             <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">Nama Karyawan</th>
                             <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">Departemen</th>
                             <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">Total Nilai</th>
@@ -119,8 +109,8 @@
                             </tr>
                         @endforelse
                     </tbody>
-                </table>                
-            </div>
+                </table> 
+            </div>               
         </div>
     </div>
 </x-app-layout>

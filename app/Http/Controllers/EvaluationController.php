@@ -95,6 +95,15 @@ class EvaluationController extends Controller
         return view('admin.penilaian.table', compact('assessedEmployees', 'unassessedEmployees', 'selectedPeriod', 'departments', 'departmentId'));
     }
 
+    public function showLatestPeriod()
+    {
+        // Ambil periode terbaru
+        $latestPeriod = Period::latest()->first();
+    
+        // Redirect ke halaman penilaian untuk periode terbaru
+        return redirect()->route('periods.showEmployee', ['period_id' => $latestPeriod->id]);
+    }
+
     public function deleteScore($employeeId, $periodId)
     {
         // Find and delete all scores for the employee in the given period
@@ -118,10 +127,13 @@ class EvaluationController extends Controller
 
     public function showSubcriteriaEvaluation($employeeId, $periodId)
     {
-        $employee = Employee::find($employeeId);
-        $period = Period::find($periodId);
-        $subcriterias = SubCriteria::with('criteria')->get()->groupBy('criteria.name');
-
+        $employee = Employee::findOrFail($employeeId);
+        $period = Period::findOrFail($periodId);
+        
+        $subcriterias = SubCriteria::with(['criteria'])
+                        ->get()
+                        ->groupBy('criteria.name'); // Kelompokkan berdasarkan nama kriteria
+    
         return view('admin.penilaian.evaluate', compact('employee', 'period', 'subcriterias'));
     }
 

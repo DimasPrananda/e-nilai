@@ -1,35 +1,35 @@
 <x-app-layout>
-    <div class="flex-1 flex">
-        <div class="p-12 flex-1">
-            <div class="container mx-auto p-4">
-                <h1 class="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">Penilaian di Periode {{ $selectedPeriod->period }}</h1>
+    <div class="p-4 md:p-12 flex-1 w-screen md:w-full">
+        <div class="container mx-auto p-4">
+            <h1 class="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">{{ $selectedPeriod->period }}</h1>
+            
+            <!-- Filter Departemen -->
+            <form x-data="{ departmentId: '{{ old('department_id', session('last_department_id', $departmentId)) }}' }" x-ref="form" action="{{ route('periods.showEmployee') }}" method="GET" class="mb-4">
+                <div class="flex items-center mb-4">
+                    <select name="department_id" id="department_id" x-model="departmentId" @change="$refs.form.submit()" class="form-select block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-800 dark:text-gray-200">
+                        @foreach($departments as $department)
+                            <option value="{{ $department->id }}" {{ $department->id == old('department_id', session('last_department_id', $departmentId)) ? 'selected' : '' }}>
+                                {{ $department->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="flex items-center mb-4">
+                    <input type="text" name="search" x-model="search" placeholder="Cari Nama Karyawan..." class="form-input block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-800 dark:text-gray-200">
+                    <button type="submit" class="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Cari</button>
+                </div>
                 
-                <!-- Filter Departemen -->
-                <form x-data="{ departmentId: '{{ old('department_id', session('last_department_id', $departmentId)) }}' }" x-ref="form" action="{{ route('periods.showEmployee') }}" method="GET" class="mb-4">
-                    <div class="flex items-center mb-4">
-                        <select name="department_id" id="department_id" x-model="departmentId" @change="$refs.form.submit()" class="form-select block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-800 dark:text-gray-200">
-                            @foreach($departments as $department)
-                                <option value="{{ $department->id }}" {{ $department->id == old('department_id', session('last_department_id', $departmentId)) ? 'selected' : '' }}>
-                                    {{ $department->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+                <input type="hidden" name="period_id" value="{{ $selectedPeriod->id }}">
+            </form>                
 
-                    <div class="flex items-center mb-4">
-                        <input type="text" name="search" x-model="search" placeholder="Cari Nama Karyawan..." class="form-input block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-800 dark:text-gray-200">
-                        <button type="submit" class="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Cari</button>
-                    </div>
-                    
-                    <input type="hidden" name="period_id" value="{{ $selectedPeriod->id }}">
-                </form>                
-
-                <!-- Tabel Data Karyawan Belum Dinilai -->
-                <h2 class="text-xl font-bold mt-8 text-gray-800 dark:text-gray-200">Karyawan Belum Dinilai</h2>
+            <!-- Tabel Data Karyawan Belum Dinilai -->
+            <h2 class="text-xl font-bold mt-8 text-gray-800 dark:text-gray-200">Karyawan Belum Dinilai</h2>
+            <div class=" overflow-x-auto w-full">
                 <table class="min-w-full mt-4">
                     <thead class=" border border-b-0 bg-gray-100 dark:bg-gray-800">
                         <tr>
-                            <th class="py-3 w-12 text-center text-xs border-r font-semibold text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">NO</th>
+                            <th class="px-3 md:px-0 py-3 w-12 text-center text-xs border-r font-semibold text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">NO</th>
                             <th class="px-6 py-3 text-center text-xs border-r font-semibold text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">NAMA KARYAWAN</th>
                             <th class="px-6 py-3 text-center text-xs border-r font-semibold text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">Jabatan</th>
                             <th class="px-6 py-3 text-center text-xs font-semibold text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">AKSI</th>
@@ -57,13 +57,15 @@
                         @endforelse
                     </tbody>
                 </table>
+            </div>
 
-                <!-- Tabel Data Karyawan Sudah Dinilai -->
-                <h2 class="text-xl font-bold mt-8 text-gray-800 dark:text-gray-200">Karyawan Sudah Dinilai</h2>
+            <!-- Tabel Data Karyawan Sudah Dinilai -->
+            <h2 class="text-xl font-bold mt-8 text-gray-800 dark:text-gray-200">Karyawan Sudah Dinilai</h2>
+            <div class=" overflow-x-auto w-full">
                 <table class="min-w-full mt-4">
                     <thead class="border border-b-0 bg-gray-100 dark:bg-gray-800">
                         <tr>
-                            <th class="py-3 w-12 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">No</th>
+                            <th class="px-3 md:px-0 py-3 w-12 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">No</th>
                             <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">Nama Karyawan</th>
                             <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">Jabatan</th>
                             <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">Total Nilai</th>
@@ -100,7 +102,7 @@
                                         Edit
                                     </div>
                                 </form>
-
+    
                                 <form action="{{ route('scores.delete', ['employeeId' => $employee->id, 'periodId' => $selectedPeriod->id]) }}" method="POST" class="inline-block relative group">
                                     @csrf
                                     @method('DELETE')
