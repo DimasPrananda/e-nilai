@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="flex-1 flex">
-        <div class="py-4 md:p-4 flex-1">
+        <div class="p-4 md:p-10 flex-1">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-4 mb-4 text-center">
                 <h2 class="text-lg sm:text-xl md:text-2xl font-medium text-gray-900 dark:text-gray-100">
                     {{ $latestPeriod->period }}
@@ -140,10 +140,10 @@
                         <div class="text-lg text-gray-600 dark:text-gray-300">
                             {{ $comments->count() }} Komentar
                         </div>
-                        <form action="{{ route('comments.destroyAll') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus semua komentar?');">
+                        <form action="{{ route('comments.destroyAll') }}" method="POST" x-data="{ userType: '{{ auth()->user()->usertype ?? '' }}' }" onsubmit="return confirm('Apakah Anda yakin ingin menghapus semua komentar?');">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="px-4 py-2 bg-red-500 text-white font-bold rounded-lg shadow hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400 transition duration-300 ease-in-out mb-2">
+                            <button x-show="userType === 'admin'" type="submit" class="px-4 py-2 bg-red-500 text-white font-bold rounded-lg shadow hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400 transition duration-300 ease-in-out mb-2">
                                 Hapus Semua Komentar
                             </button>
                         </form>

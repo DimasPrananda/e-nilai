@@ -65,45 +65,47 @@
                         @endphp
                         @foreach($criterias as $criteria)
                             @foreach($criteria->subcriterias as $subcriteria)
-                                <tr class="border-b border-gray-200 dark:border-gray-700 last:border-b-0">
-                                    @if ($loop->first)
-                                        <td class=" py-4 whitespace-nowrap border-r text-center text-sm font-medium text-gray-900 dark:text-gray-100 border-gray-200 dark:border-gray-700" rowspan="{{ count($criteria['subcriterias']) }}">
-                                            {{ $loop->parent->iteration }} .
+                                <!-- Cek apakah subkriteria sudah dinilai -->
+                                @if(isset($scores[$subcriteria->id]))
+                                    <tr class="border-b border-gray-200 dark:border-gray-700 last:border-b-0">
+                                        @if ($loop->first)
+                                            <td class="py-4 whitespace-nowrap border-r text-center text-sm font-medium text-gray-900 dark:text-gray-100 border-gray-200 dark:border-gray-700" rowspan="{{ count($criteria->subcriterias) }}">
+                                                {{ $loop->parent->iteration }}.
+                                            </td>
+                                        @endif
+                                        @if ($loop->first)
+                                            <td class="px-6 py-4 whitespace-nowrap border-r text-sm font-medium text-gray-900 dark:text-gray-100 border-gray-200 dark:border-gray-700" rowspan="{{ $criteria->subcriterias->count() }}">
+                                                {{ $criteria->name }}
+                                            </td>
+                                        @endif
+                                        <td class="px-6 py-4 whitespace-nowrap border-r text-sm text-gray-500 dark:text-gray-300 border-gray-200 dark:border-gray-700">
+                                            {{ $subcriteria->detail }}
                                         </td>
-                                    @endif
-                                    @if ($loop->first)
-                                        <td class="px-6 py-4 whitespace-nowrap border-r text-sm font-medium text-gray-900 dark:text-gray-100 border-gray-200 dark:border-gray-700" rowspan="{{ $criteria->subcriterias->count() }}">
-                                            {{ $criteria->name }}
+                                        <td class="px-6 py-4 whitespace-nowrap border-r text-center text-sm text-gray-500 dark:text-gray-300 border-gray-200 dark:border-gray-700">
+                                            @php
+                                                $score = $scores[$subcriteria->id] ?? 0;
+                                                $totalScore += $score;
+                                            @endphp
+                                            {{ $score }}
                                         </td>
-                                    @endif
-                                    <td class="px-6 py-4 whitespace-nowrap border-r text-sm text-gray-500 dark:text-gray-300 border-gray-200 dark:border-gray-700">
-                                        {{ $subcriteria->detail }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap border-r text-center text-sm text-gray-500 dark:text-gray-300 border-gray-200 dark:border-gray-700">
-                                        @php
-                                            $score = $scores[$subcriteria->id] ?? 0;
-                                            $totalScore += $score;
-                                        @endphp
-                                        {{ $score }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500 dark:text-gray-300 border-gray-200 dark:border-gray-700">
-                                        @php
-                                            $score = $scores[$subcriteria->id] ?? 0;
-                                            if ($score >= 80) {
-                                                $grade = 'A';
-                                            } elseif ($score >= 70) {
-                                                $grade = 'B';
-                                            } elseif ($score >= 60) {
-                                                $grade = 'C';
-                                            } elseif ($score >= 50) {
-                                                $grade = 'D';
-                                            } else {
-                                                $grade = 'E';
-                                            }
-                                        @endphp
-                                        {{ $grade }}
-                                    </td>
-                                </tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500 dark:text-gray-300 border-gray-200 dark:border-gray-700">
+                                            @php
+                                                if ($score >= 80) {
+                                                    $grade = 'A';
+                                                } elseif ($score >= 70) {
+                                                    $grade = 'B';
+                                                } elseif ($score >= 60) {
+                                                    $grade = 'C';
+                                                } elseif ($score >= 50) {
+                                                    $grade = 'D';
+                                                } else {
+                                                    $grade = 'E';
+                                                }
+                                            @endphp
+                                            {{ $grade }}
+                                        </td>
+                                    </tr>
+                                @endif
                             @endforeach
                         @endforeach
                     </tbody>

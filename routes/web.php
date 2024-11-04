@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\PeriodController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
@@ -32,7 +33,8 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-Route::get('admin/dashboard', [HomeController::class, 'admin'])->middleware(['auth', 'admin'])->name('admin.dashboard');
+Route::get('admin/dashboard', [HomeController::class, 'admin'])->middleware(['auth', 'admin_or_penilai'])->name('admin.dashboard');
+Route::get('user/dashboard', [HomeController::class, 'user'])->middleware(['auth', 'user'])->name('user.dashboard');
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/comments', [CommentController::class, 'index'])->name('comments.index');
@@ -59,7 +61,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::delete('admin/golongans/{golongan}', [GolonganController::class, 'destroy'])->name('golongan.destroy');
 });
 
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::middleware(['auth', 'admin_or_penilai'])->group(function () {
     Route::get('admin/karyawan', [EmployeeController::class, 'index'])->name('admin.karyawan.employees');
     Route::get('admin/karyawan/create', [EmployeeController::class, 'create'])->name('admin.karyawan.create');
     Route::post('admin/karyawan', [EmployeeController::class, 'store'])->name('admin.karyawan.store');
@@ -77,8 +79,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('admin/subcriterias', [SubCriteriaController::class, 'index'])->name('admin.penilaian.subcriterias');
-    Route::post('admin/subcriterias', [SubCriteriaController::class, 'store'])->name('subcriteria.store');
-    Route::delete('admin/subcriterias/{subcriteria}', [SubCriteriaController::class, 'destroy'])->name('subcriteria.destroy');
+    Route::post('admin/subcriterias', [SubCriteriaController::class, 'store'])->name('subcriterias.store');
+    Route::delete('admin/subcriterias/{subcriteria}', [SubCriteriaController::class, 'destroy'])->name('subcriterias.destroy');
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -102,7 +104,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::delete('admin/ranking/subcriterias/{ranking_subcriteria}', [RankingSubcriteriaController::class, 'destroy'])->name('subcriteria.destroy');
 });
 
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::middleware(['auth', 'admin_or_penilai'])->group(function () {
     Route::get('admin/penilaian/periods', [EvaluationController::class, 'SelectIndex'])->name('admin.penilaian.select-periods');
     Route::get('admin/penilaian/periods/select', [EvaluationController::class, 'showEmployee'])->name('periods.showEmployee');
     Route::post('admin/penilaian/periods/select', [EvaluationController::class, 'showEmployee'])->name('periods.showEmployee');
@@ -115,17 +117,21 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::put('admin/penilaian/periode/karyawan/{employee}/evaluate/{period}/subcriteria', [EvaluationController::class, 'updateScore'])->name('scores.update');
 });
 
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::middleware(['auth', 'admin_or_penilai'])->group(function () {
     Route::get('admin/ranking/periods', [BestEmployeeController::class, 'select'])->name('admin.ranking.select-periods');
     Route::get('admin/ranking/periods/select', [BestEmployeeController::class, 'showEmployee'])->name('rankings.showEmployee');
     Route::post('admin/ranking/periods/select', [BestEmployeeController::class, 'showEmployee'])->name('rankings.showEmployee');
     Route::get('admin/ranking/periode/karyawan/{employee}/evaluate/{period}/subcriteria', [BestEmployeeController::class, 'showSubcriteriaEvaluation'])->name('rankings.subcriteriaEvaluation');
     Route::post('admin/ranking/periode/karyawan/{employee}/evaluate/{period}/subcriteria', [BestEmployeeController::class, 'storeSubcriteriaEvaluation'])->name('rankings.storeSubcriteriaEvaluation');
-    Route::get('/employee/{employee}/period/{period}/detail', [BestEmployeeController::class, 'showDetailEvaluation'])->name('ranking.detail');
+    Route::get('admin/employee/{employee}/period/{period}/detail', [BestEmployeeController::class, 'showDetailEvaluation'])->name('ranking.detail');
     Route::delete('admin/ranking/periods/select/{employeeId}/{periodId}', [BestEmployeeController::class, 'deleteScore'])->name('ranking.delete');
 });
 
+Route::middleware(['auth', 'user'])->group(function () {
+    Route::get('user/periods', [UserController::class, 'selectPeriods'])->name('user.select-periods');
+    Route::get('user/penilaian/{period}', [UserController::class, 'showDetail'])->name('user.detail');
+});
 
-Route::get('penilai/dashboard', [HomeController::class, 'penilai'])->middleware(['auth', 'penilai']);
+
 
 

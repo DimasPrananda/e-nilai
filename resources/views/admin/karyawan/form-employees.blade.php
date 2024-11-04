@@ -3,7 +3,7 @@
         <div class="">
             <h1 class="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">Formulir Data Karyawan</h1>
 
-            <form action="{{ route('admin.karyawan.store') }}" method="POST">
+            <form action="{{ route('admin.karyawan.store') }}" method="POST" x-data="{ userType: '{{ auth()->user()->usertype ?? '' }}' }">
                 @csrf
 
                 <!-- Nama Karyawan -->
@@ -24,19 +24,19 @@
                     <input type="password" name="password" id="password" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-800 dark:text-gray-200" required>
                 </div>
 
-                <div class="mb-4">
+                <div class="mb-4" x-show="userType === 'admin'">
                     <label for="usertype" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipe Pengguna:</label>
                     <div class="mt-2">
                         <label class="inline-flex items-center">
-                            <input type="radio" name="usertype" value="user" class="form-radio text-indigo-600 dark:bg-gray-800 dark:text-gray-200" required>
+                            <input type="radio" name="usertype" value="user" x-model="userType" class="form-radio text-indigo-600 dark:bg-gray-800 dark:text-gray-200" required>
                             <span class="ml-2 text-gray-700 dark:text-gray-300">User</span>
                         </label>
                         <label class="inline-flex items-center ml-6">
-                            <input type="radio" name="usertype" value="penilai" class="form-radio text-indigo-600 dark:bg-gray-800 dark:text-gray-200" required>
+                            <input type="radio" name="usertype" value="penilai" x-model="userType" class="form-radio text-indigo-600 dark:bg-gray-800 dark:text-gray-200">
                             <span class="ml-2 text-gray-700 dark:text-gray-300">Penilai</span>
                         </label>
                         <label class="inline-flex items-center ml-6">
-                            <input type="radio" name="usertype" value="admin" class="form-radio text-indigo-600 dark:bg-gray-800 dark:text-gray-200" required>
+                            <input type="radio" name="usertype" value="admin" x-model="userType" class="form-radio text-indigo-600 dark:bg-gray-800 dark:text-gray-200">
                             <span class="ml-2 text-gray-700 dark:text-gray-300">Admin</span>
                         </label>
                     </div>

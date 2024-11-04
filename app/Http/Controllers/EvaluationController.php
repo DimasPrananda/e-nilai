@@ -140,28 +140,30 @@ class EvaluationController extends Controller
     public function storeSubcriteriaEvaluation(Request $request, $employeeId, $periodId)
     {
         $request->validate([
-            'scores' => 'required|array', // Memastikan 'scores' adalah array
-            'scores.*' => 'required|numeric|min:0|max:100' // Validasi nilai setiap subkriteria
+            'scores' => 'required|array',
+            'scores.*' => 'required|numeric|min:0|max:100' 
         ]);
     
         $totalScore = 0;
     
         foreach ($request->scores as $subcriteriaId => $score) {
-            // Simpan setiap penilaian subkriteria
+            $subcriteria = SubCriteria::findOrFail($subcriteriaId);
             $evaluation = Evaluation::updateOrCreate(
                 [
                     'employee_id' => $employeeId,
                     'period_id' => $periodId,
                     'subcriteria_id' => $subcriteriaId
                 ],
-                ['score' => $score]
+                [
+                    'score' => $score,
+                    'subcriteria_snapshot' => json_encode($subcriteria)
+                ]
+                
             );
     
-            // Tambahkan skor ke total
             $totalScore += $score;
         }
     
-        // Simpan atau update total skor ke tabel total_scores
         TotalScore::updateOrCreate(
             [
                 'employee_id' => $employeeId,

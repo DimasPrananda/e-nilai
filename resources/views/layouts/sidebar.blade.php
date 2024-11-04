@@ -161,10 +161,95 @@
 
 <!-- Penilai Sidebar -->
 @if(Auth::user()->usertype === 'penilai')
-<nav class="bg-white dark:bg-gray-800 shadow">
-        <ul>
-            <li><a href="#">Fitur 2</a></li>
-            <li><a href="#">Fitur 3</a></li>
-        </ul>
-    </nav>
+<div class="hidden md:block">
+    <div x-data="{ 
+        openEmployeeSubmenu: {{ Route::is('admin.karyawan.employees') ? 'true' : 'false' }},
+        openEvaluationSubmenu: {{ Route::is('admin.penilaian.select-periods') ? 'true' : 'false' }},
+        openRankingSubmenu: {{ Route::is('admin.ranking.select-periods') ? 'true' : 'false' }}
+    }" class="fixed h-screen w-64 p-4 bg-gray-800 text-white ">
+        <nav>
+            <ul>
+                <!-- Dashboard Menu Item -->
+                <li>
+                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                        <div class="flex justify-between items-center">
+                            <svg class="w-4 h-4 ml-1 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                            </svg>
+                            Dashboard
+                        </div>
+                    </x-nav-link>
+                </li>
+
+                <li>
+                    <x-nav-link :href="route('admin.karyawan.employees')" :active="request()->routeIs('admin.karyawan.employees')">
+                        <div class="flex justify-between items-center">
+                            <svg class="w-4 h-4 ml-1 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                            </svg>                            
+                            Data Karyawan
+                        </div>
+                    </x-nav-link>
+                </li>
+                
+                <li>
+                    <x-nav-link :href="route('admin.penilaian.select-periods')" :active="request()->routeIs('admin.penilaian.select-periods')">
+                        <div class="flex justify-between items-center">
+                            <svg class="w-4 h-4 ml-1 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19 3H5c-1.1 0-1.99.9-1.99 2L3 19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 12H8v-2h4v2zm0-4H8V9h4v2zm4 4h-2v-2h2v2zm0-4h-2V9h2v2z"/>
+                            </svg>                            
+                            Penilaian
+                        </div>
+                    </x-nav-link>
+                </li>
+                
+                <li>
+                    <x-nav-link :href="route('admin.ranking.select-periods')" :active="request()->routeIs('admin.ranking.select-periods')">
+                        <div class="flex justify-between items-center">
+                            <svg class="w-4 h-4 ml-1 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                            </svg>                            
+                            Karyawan Terbaik
+                        </div>
+                    </x-nav-link>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+@endif
+
+@if(Auth::user()->usertype === 'user')
+<div class="hidden md:block">
+    <div x-data="{ 
+        openEvaluationSubmenu: {{ Route::is('user.select-periods') ? 'true' : 'false' }},
+    }" class="fixed h-screen w-64 p-4 bg-gray-800 text-white ">
+        <nav>
+            <ul>
+                <!-- Dashboard Menu Item -->
+                <li>
+                    <x-nav-link :href="route('user.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                        <div class="flex justify-between items-center">
+                            <svg class="w-4 h-4 ml-1 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                            </svg>
+                            Dashboard
+                        </div>
+                    </x-nav-link>
+                </li>
+
+                <li>
+                    <x-nav-link :href="route('user.select-periods')" :active="request()->routeIs('user.select-periods')">
+                        <div class="flex justify-between items-center">
+                            <svg class="w-4 h-4 ml-1 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                            </svg>                            
+                            Nilai
+                        </div>
+                    </x-nav-link>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
 @endif

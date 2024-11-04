@@ -70,7 +70,6 @@ class CriteriaController extends Controller
     public function destroy(Criteria $criteria)
     {
         $criteria->delete();
-
         return redirect()->route('admin.penilaian.criterias')->with('success', 'Criteria deleted successfully.');
     }
 }

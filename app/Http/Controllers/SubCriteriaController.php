@@ -74,9 +74,9 @@ class SubCriteriaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Subcriteria $subCriteria)
+    public function destroy(Subcriteria $subcriteria)
     {
-        $subCriteria->delete();
-        return redirect()->route('admin.subcriterias')->with('success', 'Subcriteria deleted successfully');
+        $subcriteria->delete();
+        return redirect()->route('admin.penilaian.subcriterias')->with('success', 'Subcriteria deleted successfully');
     }
 }

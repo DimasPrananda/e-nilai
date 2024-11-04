@@ -3,7 +3,7 @@
         <div class="">
             <h1 class="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">Edit Data Karyawan</h1>
 
-            <form action="{{ route('admin.karyawan.update', $employee->id) }}" method="POST">
+            <form action="{{ route('admin.karyawan.update', $employee->id) }}" method="POST" x-data="{ userType: '{{ auth()->user()->usertype ?? '' }}' }">
                 @csrf
                 @method('PUT')
 
@@ -26,7 +26,7 @@
                     <p class="text-sm text-gray-500 dark:text-gray-400">Kosongkan jika tidak ingin mengubah password</p>
                 </div>
 
-                <div class="mb-4">
+                <div class="mb-4" x-show="userType === 'admin'">
                     <label for="usertype" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipe Pengguna:</label>
                     <div class="mt-2">
                         <label class="inline-flex items-center">

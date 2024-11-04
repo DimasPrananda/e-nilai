@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class Penilai
+class AdminOrPenilaiMiddleware
 {
     /**
      * Handle an incoming request.
@@ -16,8 +16,8 @@ class Penilai
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::user()->usertype != 'penilai') {
-            return redirect('admin/dashboard');
+        if (Auth::check() && (Auth::user()->role === 'admin' || Auth::user()->role === 'penilai')) {
+            return redirect('admin.dashboard');
         }
         return $next($request);
     }

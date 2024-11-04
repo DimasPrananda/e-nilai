@@ -16,7 +16,7 @@
 
             <!-- Formulir Input Sub Kriteria -->
             <div x-show="showForm" x-transition>
-                <form action="{{ route('subcriteria.store') }}" method="POST">
+                <form action="{{ route('subcriterias.store') }}" method="POST">
                     @csrf
                     <div class="mb-4">
                         <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nama Sub Kriteria:</label>
@@ -78,7 +78,7 @@
                             <td class="px-6 py-4 whitespace-no-wrap border-r border-gray-300 dark:border-gray-600 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">{{ $subcriteria->criteria->name }}</td>
                             <td class="px-6 py-4 whitespace-no-wrap border-gray-300 dark:border-gray-600 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">                                
                                 <!-- Tombol Delete -->
-                                <form action="{{ route('subcriteria.destroy', $subcriteria->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this subcriteria?');" class="inline-block">
+                                <form action="{{ route('subcriterias.destroy', $subcriteria->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this subcriteria?');" class="inline-block">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
