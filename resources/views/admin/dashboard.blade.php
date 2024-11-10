@@ -47,59 +47,98 @@
             </div>
             
             <div class="flex flex-col sm:flex-row mb-2 md:mb-4 md:gap-5">
-                <div class="flex-1 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-4 sm:mb-0">
-                    <div class="flex flex-col h-full p-6 text-gray-900 dark:text-gray-100">
-                        <h2 class="text-lg text-center font-medium text-gray-900 dark:text-gray-100 mb-8">Penilaian Karyawan</h2>
-                        <div class="flex-grow">
-                            <table class="min-w-full">
-                                <thead class="w-full border rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-600 uppercase text-sm leading-normal">
-                                    <tr>
-                                        <th class="py-3 w-12 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">Belum di nilai</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="text-gray-600 dark:text-gray-400 text-sm font-light">
-                                    <tr class="border border-gray-700 dark:border-gray-300">
-                                        <td class="py-3 px-6 text-center">{{ $employeesNotScored }}</td>
-                                    </tr>
-                                </tbody>
-                                <tfoot class="w-full border border-gray-700 dark:border-gray-300">
-                                    <tr>
-                                        <td class="flex text-center">
-                                            @if ($employeesNotScored > 0)
-                                            <a href="{{ route('admin.penilaian.latest') }}" class="w-full py-3 px-6 bg-blue-500 text-white font-bold hover:bg-blue-600">
-                                                Lakukan Penilaian
-                                            </a>
-                                            @else
-                                                <span class="w-full py-3 px-6 text-gray-600 dark:text-gray-300">Semua karyawan sudah dinilai</span>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                <div class="flex-1 bg-white p-5 dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-4 sm:mb-0">
+                    <h2 class="text-lg text-left font-medium text-gray-900 dark:text-gray-100 mb-4">Karyawan belum dinilai</h2>
+                    <div class="flex flex-col md:flex-row items-center justify-between">
+                        <div class="flex items-center">
+                            <svg class="w-20 h-20 mr-10 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                <path fill-rule="evenodd" d="M12 20a7.966 7.966 0 0 1-5.002-1.756l.002.001v-.683c0-1.794 1.492-3.25 3.333-3.25h3.334c1.84 0 3.333 1.456 3.333 3.25v.683A7.966 7.966 0 0 1 12 20ZM2 12C2 6.477 6.477 2 12 2s10 4.477 10 10c0 5.5-4.44 9.963-9.932 10h-.138C6.438 21.962 2 17.5 2 12Zm10-5c-1.84 0-3.333 1.455-3.333 3.25S10.159 13.5 12 13.5c1.84 0 3.333-1.455 3.333-3.25S13.841 7 12 7Z" clip-rule="evenodd"/>
+                            </svg>
+                            <h2 class="text-gray-800 dark:text-white text-2xl">{{ $employeesNotScored }}</h2>
                         </div>
+                        <td class="text-center">
+                            @if ($employeesNotScored > 0)
+                                <a href="{{ route('admin.penilaian.latest') }}" class="flex items-center justify-center w-full py-3 px-6 bg-blue-500 text-white font-bold hover:bg-blue-600">
+                                    <svg class="w-6 h-6 mr-2 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"> 
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
+                                    </svg>
+                                    Lakukan Penilaian
+                                </a>
+                            @else
+                                <a class="flex items-center justify-center py-3 px-6 bg-gray-600 text-white font-bold rounded-lg">
+                                    <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"> 
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
+                                    </svg>
+                                </a>
+                            @endif
+                        </td>                                                                     
+                    </div>
+                </div>
 
-                        <table class="min-w-full mt-4">
+                <div class="flex-1 bg-white p-5 dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-4 sm:mb-0">
+                    <h2 class="text-lg text-left font-medium text-gray-900 dark:text-gray-100 mb-4">Karyawan dinilai</h2>
+                    <div class="flex flex-col md:flex-row items-center justify-between">
+                        <div class="flex items-center">
+                            <svg class="w-20 h-20 mr-10 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                <path fill-rule="evenodd" d="M12 20a7.966 7.966 0 0 1-5.002-1.756l.002.001v-.683c0-1.794 1.492-3.25 3.333-3.25h3.334c1.84 0 3.333 1.456 3.333 3.25v.683A7.966 7.966 0 0 1 12 20ZM2 12C2 6.477 6.477 2 12 2s10 4.477 10 10c0 5.5-4.44 9.963-9.932 10h-.138C6.438 21.962 2 17.5 2 12Zm10-5c-1.84 0-3.333 1.455-3.333 3.25S10.159 13.5 12 13.5c1.84 0 3.333-1.455 3.333-3.25S13.841 7 12 7Z" clip-rule="evenodd"/>
+                            </svg>
+                            <h2 class="text-gray-800 dark:text-white text-2xl">{{ $employeesScored }}</h2>
+                        </div>                                                              
+                    </div>
+                </div>
+            </div>
+            {{-- <div class="flex-1 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-4 sm:mb-0">
+                <div class="flex flex-col h-full p-6 text-gray-900 dark:text-gray-100">
+                    <h2 class="text-lg text-center font-medium text-gray-900 dark:text-gray-100 mb-8">Penilaian Karyawan</h2>
+                    <div class="flex-grow">
+                        <table class="min-w-full">
                             <thead class="w-full border rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-600 uppercase text-sm leading-normal">
                                 <tr>
-                                    <th class="py-3 w-12 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">Sudah di nilai</th>
+                                    <th class="py-3 w-12 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">Belum di nilai</th>
                                 </tr>
                             </thead>
                             <tbody class="text-gray-600 dark:text-gray-400 text-sm font-light">
                                 <tr class="border border-gray-700 dark:border-gray-300">
-                                    <td class="py-3 px-6 text-center">{{ $employeesScored }}</td>
+                                    <td class="py-3 px-6 text-center">{{ $employeesNotScored }}</td>
                                 </tr>
                             </tbody>
+                            <tfoot class="w-full border border-gray-700 dark:border-gray-300">
+                                <tr>
+                                    <td class="flex text-center">
+                                        @if ($employeesNotScored > 0)
+                                        <a href="{{ route('admin.penilaian.latest') }}" class="w-full py-3 px-6 bg-blue-500 text-white font-bold hover:bg-blue-600">
+                                            Lakukan Penilaian
+                                        </a>
+                                        @else
+                                            <span class="w-full py-3 px-6 text-gray-600 dark:text-gray-300">Semua karyawan sudah dinilai</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
-                </div>   
-                
-                <div class="flex-1 p-6 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-2 sm:mb-0">
-                    <h2 class="text-lg text-center font-medium text-gray-900 dark:text-gray-100">Rata-rata Skor Karyawan per Departemen</h2>
-                    <div class="p-6">
-                        <canvas id="departmentChart" class="w-full"></canvas>
-                    </div>          
-                </div>   
-            </div>
+
+                    <table class="min-w-full mt-4">
+                        <thead class="w-full border rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-600 uppercase text-sm leading-normal">
+                            <tr>
+                                <th class="py-3 w-12 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">Sudah di nilai</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-600 dark:text-gray-400 text-sm font-light">
+                            <tr class="border border-gray-700 dark:border-gray-300">
+                                <td class="py-3 px-6 text-center">{{ $employeesScored }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>    --}}
+
+            <div class="flex-1 p-6 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-4">
+                <h2 class="text-lg text-center font-medium text-gray-900 dark:text-gray-100">Rata-rata Skor Karyawan per Departemen</h2>
+                <div class="p-6">
+                    <canvas id="departmentChart" class="w-full"></canvas>
+                </div>          
+            </div>   
 
             <div class="mb-4">
                 <div class="flex-1 p-4 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 border-b overflow-hidden shadow-sm sm:rounded-lg sm:rounded-b-none sm:mb-0">
