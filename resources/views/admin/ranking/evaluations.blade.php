@@ -1,7 +1,14 @@
 <x-app-layout>
-    <div class="p-4 md:p-12 flex-1 w-screen md:w-full">
-        <div class="container mx-auto p-4" x-data="{ formValid: true, scores: {} }">
-            <h1 class="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">Penilaian Subkriteria untuk {{ $employee->name }}</h1>
+    <div class="p-4 md:p-12 flex-1 w-screen md:w-full" x-data="{ formValid: true, scores: {} }">
+        <div class="p-5 md:p-0 mb-4">
+            <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-2">Detail Penilaian Karyawan {{ $employee->name }}</h1>
+            <a href="{{ route('admin.dashboard') }}" class="text-gray-800 dark:text-gray-400 hover:dark:text-gray-200 hover:text-black">Dashboard </a>
+            <a href="javascript:void(0);" onclick="history.back();" class="text-gray-800 dark:text-gray-400 hover:dark:text-gray-200 hover:text-black">/ Kelola Data Penilaian Karyawan Terbaik</a>
+            <a class="text-gray-800 dark:text-gray-200 font-bold">/ Detail Penilaian Karyawan Terbaik</a>
+        </div>
+
+        <div class="flex flex-col bg-white p-5 dark:bg-gray-800 sm:rounded-lg">
+
             <form action="{{ route('rankings.storeSubcriteriaEvaluation', ['employee' => $employee->id, 'period' => $period->id]) }}" method="POST" @submit.prevent="if (formValid) $el.submit()">
                 @csrf
                 @foreach($subcriterias as $criteriaName => $criteriaSubcriterias)
@@ -24,7 +31,14 @@
                         @endforeach
                     </div>
                 @endforeach
-                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" :disabled="!formValid">Simpan</button>
+                <div class="flex justify-end gap-4">
+                    <button type="reset" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                        Reset
+                    </button>
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Simpan
+                    </button>
+                </div>
             </form>
         </div>
     </div>

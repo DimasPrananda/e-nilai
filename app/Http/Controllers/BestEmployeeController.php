@@ -18,6 +18,7 @@ class BestEmployeeController extends Controller
         // Ambil data karyawan dan periode berdasarkan ID
         $employee = Employee::findOrFail($employeeId);
         $period = Period::findOrFail($periodId);
+        $selectedPeriod = Period::find($periodId);
 
         // Mengambil semua subkriteria beserta kriteria yang terkait
         $subcriterias = RankingSubcriteria::with('ranking_criteria')->get()->groupBy('ranking_criteria.name');
@@ -80,7 +81,7 @@ class BestEmployeeController extends Controller
 
         $totalWeightEvaluation = collect($criteriaDetails)->sum('weight_evaluation');
         // Return view dengan data yang dibutuhkan
-        return view('admin.ranking.detail', compact('employee', 'period', 'criterias', 'scores', 'totalScore', 'criteriaDetails', 'totalWeightEvaluation'));
+        return view('admin.ranking.detail', compact('employee', 'selectedPeriod', 'period', 'criterias', 'scores', 'totalScore', 'criteriaDetails', 'totalWeightEvaluation'));
     }
 
 

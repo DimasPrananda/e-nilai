@@ -17,7 +17,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900 flex flex-col">
+        <div class="min-h-screen bg-gray-200 dark:bg-gray-900 flex flex-col">
             @include('layouts.navigation')
             <div class="flex flex-1">
                 @include('layouts.sidebar')
@@ -33,7 +33,7 @@
                     @endisset
                     
                     <!-- Page Content -->
-                    <main class="flex flex-1 ml-0 md:ml-64">
+                    <main class="flex flex-1 ml-0">
                         {{ $slot }}
                         @stack('scripts')
                     </main>

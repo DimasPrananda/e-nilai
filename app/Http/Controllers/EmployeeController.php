@@ -24,7 +24,25 @@ class EmployeeController extends Controller
             $query->where('department_id', $request->input('department_id'));
         }
 
-        $employees = $query->get();
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->input('search') . '%');
+        }
+
+        $entriesPerPage = $request->input('entries_per_page', 10);
+
+        $employees = $query->paginate($entriesPerPage);
+
+        if ($request->ajax()) {
+            // Render HTML untuk tabel dan pagination link
+            $html = view('admin.karyawan.employees-list', compact('employees'))->render();
+            $paginationLinks = $employees->appends(request()->query())->links()->render();
+
+            return response()->json([
+                'html' => $html,
+                'pagination' => $paginationLinks,
+            ]);
+        }
+
         return view('admin.karyawan.employees', compact('departments', 'employees'));
     }
 
@@ -128,7 +146,6 @@ class EmployeeController extends Controller
         ]);
 
         return redirect()->route('admin.karyawan.employees')->with('success', 'Karyawan berhasil diperbarui.');
-
     }
 
     /**
@@ -138,18 +155,18 @@ class EmployeeController extends Controller
     {
         // Temukan karyawan berdasarkan ID
         $employee = Employee::findOrFail($id);
-    
+
         // Temukan pengguna berdasarkan employee_number
         $user = User::where('name', $employee->name)->first(); // Ganti ini jika Anda menggunakan metode lain untuk mengaitkan employee dengan user
-    
+
         // Hapus pengguna jika ada
         if ($user) {
             $user->delete();
         }
-    
+
         // Hapus karyawan
         $employee->delete();
-    
+
         return redirect()->route('admin.karyawan.employees')->with('success', 'Karyawan berhasil dihapus.');
     }
 }

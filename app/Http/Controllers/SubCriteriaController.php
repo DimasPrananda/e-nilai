@@ -20,7 +20,24 @@ class SubCriteriaController extends Controller
             $query->where('criteria_id', $request->input('criteria_id'));
         }
 
-        $subcriterias = $query->get();
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->input('search') . '%');
+        }
+
+        $entriesPerPage = $request->input('entries_per_page', 10); 
+
+        $subcriterias = $query->paginate($entriesPerPage);
+
+        if ($request->ajax()) {
+            $html = view('admin.penilaian.subcriterias-list', compact('criterias', 'subcriterias'))->render();
+            $paginationLinks = $subcriterias->appends(request()->query())->links()->render();
+
+            return response()->json([
+                'html' => $html,
+                'pagination' => $paginationLinks,
+            ]);
+        }
+
         return view('admin.penilaian.subcriterias', compact('criterias', 'subcriterias'));
     }
 

@@ -1,87 +1,176 @@
 <x-app-layout>
-    <div class="p-4 md:p-12 flex-1 w-screen md:w-full">
+    <div class="p-4 md:p-12 flex-1">
         <div class="">
-            @if(session('success'))
-                <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)" class="bg-green-500 text-white p-4 rounded mb-4">
+            @if (session('success'))
+                <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
+                    class="bg-green-500 text-white p-4 rounded mb-4">
                     {{ session('success') }}
                 </div>
-                @endif
-            <!-- Tombol Tambah Karyawan -->
-            <div class="mt-4 md:mt-0">
-                <a href="{{ route('admin.karyawan.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    Tambah Karyawan
-                </a>
+            @endif
+            <div class="md:p-0 mb-4">
+                <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-2">Kelola Data Karyawan</h1>
+                <a href="{{ route('admin.dashboard') }}"
+                    class="text-gray-800 dark:text-gray-400 hover:dark:text-gray-200 hover:text-black">dashboard </a><a
+                    class="text-gray-800 dark:text-gray-200 font-bold">/ Kelola Data Karyawan</a>
             </div>
 
-            <!-- Filter Berdasarkan Departemen -->
-            <div class="mb-4 mt-4">
-                <form method="GET" action="{{ route('admin.karyawan.employees') }}">
-                    <select id="department_id" name="department_id" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-800 dark:text-gray-200" onchange="this.form.submit()">
-                        <option value="">Semua Departemen</option>
-                        @foreach($departments as $department)
-                            <option value="{{ $department->id }}" {{ request('department_id') == $department->id ? 'selected' : '' }}>
-                                {{ $department->name }}
-                            </option>
-                        @endforeach
+            <div class="flex flex-col bg-white p-5 dark:bg-gray-800 sm:rounded-lg">
+                <div class="flex-1 flex justify-between items-center mb-4">
+                    <h2 class=" text-xl font-bold text-gray-800 dark:text-gray-200">Data Karyawan</h2>
+                    <div class="mt-4 md:mt-0">
+                        <a href="{{ route('admin.karyawan.create') }}"
+                            class="flex items-center justify-between bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            <svg class="w-4 h-4 dark:text-white" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="M5 12h14m-7 7V5" />
+                            </svg>
+                            Tambah
+                        </a>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-2 mb-4">
+                    <select id="entries_per_page"
+                        class="block border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-800 dark:text-gray-200">
+                        <option value="2">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="15">15</option>
                     </select>
-                </form>
-            </div>
+                    <span class="text-gray-800 dark:text-gray-200">entri per halaman</span>
+                </div>
 
-            <!-- Tabel Data Karyawan -->
-            <h2 class="text-2xl font-bold mt-8 text-gray-800 dark:text-gray-200">Data Karyawan</h2>
-            <div class="overflow-x-auto w-full"> 
-                <table class="min-w-full mt-4 bg-white dark:bg-gray-900">
-                    <thead class="border border-b-0 bg-gray-100 dark:bg-gray-800">
-                        <tr>
-                            <th class="px-3 md:px-0 py-3 w-12 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">No</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">Nama Karyawan</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">Nomor Karyawan</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">Departemen</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">Jabatan</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">Golongan</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="border border-t-0 bg-white dark:bg-gray-900">
-                        @forelse($employees as $index => $employee)
-                            <tr class="border-b border-gray-200 dark:border-gray-700 last:border-b-0 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200">
-                                <td class="py-4 w-12 whitespace-nowrap border-r border-gray-300 dark:border-gray-700 text-center text-sm font-medium text-gray-700 dark:text-gray-300">{{ $index + 1 }} .</td>
-                                <td class="px-6 py-4 whitespace-nowrap border-r border-gray-300 dark:border-gray-700 text-left text-sm font-medium text-gray-700 dark:text-gray-300">{{ $employee->name }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap border-r border-gray-300 dark:border-gray-700 text-center text-sm font-medium text-gray-700 dark:text-gray-300">{{ $employee->employee_number }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap border-r border-gray-300 dark:border-gray-700 text-center text-sm font-medium text-gray-700 dark:text-gray-300">{{ $employee->department->name }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap border-r border-gray-300 dark:border-gray-700 text-center text-sm font-medium text-gray-700 dark:text-gray-300">{{ $employee->position->name }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap border-r border-gray-300 dark:border-gray-700 text-center text-sm font-medium text-gray-700 dark:text-gray-300">{{ $employee->golongan->name }}</td>
-                                <td class="flex justify-center space-x-2 px-6 py-4 whitespace-nowrap border-b border-gray-300 dark:border-gray-700 text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">
-                                    <form action="{{ route('admin.karyawan.edit', $employee->id) }}" method="GET" class="inline-block relative group">
-                                        @csrf
-                                        <button type="submit" class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500 hover:bg-blue-700 text-white">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100">
-                                            Edit
-                                        </div>
-                                    </form>
+                <div class="flex flex-col md:flex-row gap-2 justify-between mb-4">
+                    <form id="filterForm">
+                        <select id="department_id" name="department_id"
+                            class="block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-800 dark:text-gray-200">
+                            <option value="">Semua Departemen</option>
+                            @foreach ($departments as $department)
+                                <option value="{{ $department->id }}"
+                                    {{ request('department_id') == $department->id ? 'selected' : '' }}>
+                                    {{ $department->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </form>
+                    <input type="text" id="search_employee" placeholder="Cari Karyawan..."
+                        class="block border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-800 dark:text-gray-200">
+                </div>
 
-                                    <form action="{{ route('admin.karyawan.destroy', $employee->id) }}" method="POST" class="inline-block relative group">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="flex items-center justify-center w-8 h-8 rounded-full bg-red-500 hover:bg-red-700 text-white">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                        <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100">
-                                            Delete
-                                        </div>
-                                    </form>
-                                </td>
-                            </tr>
-                        @empty
+                {{-- Tabel Data Karyawan --}}
+                <div class="flex overflow-x-auto">
+                    <table class="flex-1">
+                        <thead class=" border-b-2 text-gray-800 dark:text-gray-200">
                             <tr>
-                                <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">Tidak ada karyawan ditemukan.</td>
+                                <th class="w-12">No</th>
+                                <th class="w-32">Nama</th>
+                                <th class="w-24">Nomor</th>
+                                <th class="w-32">Departemen</th>
+                                <th class="w-32">Jabatan</th>
+                                <th class="w-16">Golongan</th>
+                                <th class="w-24">Aksi</th>
                             </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody id="employee-list" class="text-gray-800 dark:text-gray-200 dark:bg-gray-800 bg-white ">
+                            @include('admin.karyawan.employees-list')
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 </x-app-layout>
+
+<script>
+    document.getElementById('department_id').addEventListener('change', function() {
+        const departmentId = this.value;
+        fetch(`http://e-nilai.test/admin/karyawan?department_id=${departmentId}`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const employeeList = document.getElementById('employee-list');
+                employeeList.innerHTML = data.html;
+            })
+            .catch(error => console.error('Error:', error));
+    });
+</script>
+
+<script>
+    document.getElementById('search_employee').addEventListener('input', function() {
+        const searchQuery = this.value;
+        const departmentId = document.getElementById('department_id').value;
+
+        fetch(`http://e-nilai.test/admin/karyawan?department_id=${departmentId}&search=${searchQuery}`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const employeeList = document.getElementById('employee-list');
+                employeeList.innerHTML = data.html;
+            })
+            .catch(error => console.error('Error:', error));
+    });
+</script>
+
+<script>
+    document.getElementById('entries_per_page').addEventListener('change', function() {
+        const entriesPerPage = this.value;
+        const departmentId = document.getElementById('department_id').value;
+        const searchQuery = document.getElementById('search_employee').value;
+
+        fetch(`http://e-nilai.test/admin/karyawan?department_id=${departmentId}&search=${searchQuery}&entries_per_page=${entriesPerPage}`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const employeeList = document.getElementById('employee-list');
+                employeeList.innerHTML = data.html;
+            })
+            .catch(error => console.error('Error:', error));
+    });
+</script>
+
+<script>
+    document.addEventListener('click', function(event) {
+        // Cek jika link pagination diklik
+        if (event.target.closest('#pagination-links a')) {
+            event.preventDefault();
+
+            // Dapatkan URL dari link pagination yang diklik
+            const url = event.target.closest('#pagination-links a').href;
+
+            // Ambil nilai filter yang ada
+            const departmentId = document.getElementById('department_id').value;
+            const searchQuery = document.getElementById('search_employee').value;
+            const entriesPerPage = document.getElementById('entries_per_page')?.value || 15;
+
+            // Buat URL dengan query parameters
+            const paginationUrl = new URL(url);
+            paginationUrl.searchParams.set('department_id', departmentId);
+            paginationUrl.searchParams.set('search', searchQuery);
+            paginationUrl.searchParams.set('entries_per_page', entriesPerPage);
+
+            // Fetch data menggunakan AJAX
+            fetch(paginationUrl.toString(), {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Update isi tabel dan pagination links tanpa refresh
+                    document.getElementById('employee-list').innerHTML = data.html;
+                    document.getElementById('pagination-links').innerHTML = data.pagination;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    });
+</script>

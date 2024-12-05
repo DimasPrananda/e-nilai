@@ -1,47 +1,51 @@
 <x-app-layout>
     <div class="p-4 md:p-12 flex-1 w-screen md:w-full">
-        <div class="container mx-auto p-4">
+        <div class="p-5 md:p-0 mb-4">
+            <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-2">Detail Penilaian</h1>
+            <a href="{{ route('user.dashboard') }}" class="text-gray-800 dark:text-gray-400 hover:dark:text-gray-200 hover:text-black">Dashboard </a>
+            <a href="javascript:void(0);" onclick="history.back();" class="text-gray-800 dark:text-gray-400 hover:dark:text-gray-200 hover:text-black">/ {{ $selectedPeriod->period }}</a>
+            <a class="text-gray-800 dark:text-gray-200 font-bold">/ Detail Penilaian</a>
+        </div>
 
-            <!-- Detail Penilaian -->
-            <h2 class="text-xl mb-4 font-semibold text-gray-800 dark:text-gray-300">Detail Penilaian</h2>
-            <div class="overflow-x-auto bg-white dark:bg-gray-800 shadow">
-                <table class="min-w-full">
-                    <thead class="border border-b-0 bg-gray-100 dark:bg-gray-800">
+        <div class="flex flex-col bg-white p-5 dark:bg-gray-800 sm:rounded-lg">
+            <div class="overflow-x-auto flex">
+                <table class="flex-1">
+                    <thead class="border-b dark:text-gray-200 text-gray-800">
                         <tr>
-                            <th class="px-3 md:px-0 py-3 w-12 text-center text-xs font-medium border-r text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">No</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium border-r text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">Kriteria</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium border-r text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">Subkriteria</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium border-r text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">Nilai</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">Predikat</th>
+                            <th class=" py-2 text-center ">No</th>
+                            <th class=" py-2 text-center ">Kriteria</th>
+                            <th class=" py-2 text-center ">Subkriteria</th>
+                            <th class=" py-2 text-center ">Nilai</th>
+                            <th class=" py-2 text-center ">Predikat</th>
                         </tr>
                     </thead>
-                    <tbody class="border border-t-0 border-b-0 bg-white dark:bg-gray-900 dark:divide-gray-700">
+                    <tbody class="text-gray-800 dark:text-gray-200 dark:bg-gray-800 bg-white ">
                         @php $totalScore = 0; @endphp
                         @foreach($criterias as $criteria)
                             @foreach($criteria->subcriterias as $subcriteria)
                                 @if(isset($scores[$subcriteria->id]))
-                                    <tr class="border-b border-gray-200 dark:border-gray-700 last:border-b-0">
+                                    <tr class="border-b border-gray-300 dark:border-gray-700 ">
                                         @if ($loop->first)
-                                            <td class="py-4 whitespace-nowrap border-r text-center text-sm font-medium text-gray-900 dark:text-gray-100 border-gray-200 dark:border-gray-700" rowspan="{{ count($criteria->subcriterias) }}">
+                                            <td class="py-2 text-center " rowspan="{{ count($criteria->subcriterias) }}">
                                                 {{ $loop->parent->iteration }}.
                                             </td>
                                         @endif
                                         @if ($loop->first)
-                                            <td class="px-6 py-4 whitespace-nowrap border-r text-sm font-medium text-gray-900 dark:text-gray-100 border-gray-200 dark:border-gray-700" rowspan="{{ $criteria->subcriterias->count() }}">
+                                            <td class="py-2 " rowspan="{{ $criteria->subcriterias->count() }}">
                                                 {{ $criteria->name }}
                                             </td>
                                         @endif
-                                        <td class="px-6 py-4 whitespace-nowrap border-r text-sm text-gray-500 dark:text-gray-300 border-gray-200 dark:border-gray-700">
+                                        <td class="py-2 ">
                                             {{ $subcriteria->detail }}
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap border-r text-center text-sm text-gray-500 dark:text-gray-300 border-gray-200 dark:border-gray-700">
+                                        <td class="py-2  text-center ">
                                             @php
                                                 $score = $scores[$subcriteria->id] ?? 0;
                                                 $totalScore += $score;
                                             @endphp
                                             {{ $score }}
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500 dark:text-gray-300 border-gray-200 dark:border-gray-700">
+                                        <td class="py-2 text-center">
                                             @php
                                                 $grade = match (true) {
                                                     $score >= 80 => 'A',
@@ -58,11 +62,11 @@
                             @endforeach
                         @endforeach
                     </tbody>
-                    <tfoot class="border border-t-0 border-gray-700 dark:border-gray-200 bg-gray-100 dark:bg-gray-800">
+                    <tfoot>
                         <tr>
-                            <td colspan="3" class="px-6 py-4 text-center text-sm font-medium text-gray-900 dark:text-gray-100">Total Skor</td>
-                            <td class="px-6 py-4 text-center text-sm font-medium text-gray-900 dark:text-gray-100">{{ $totalScore }}</td>
-                            <td class="px-6 py-4 text-center text-sm font-medium text-gray-900 dark:text-gray-100"></td>
+                            <td colspan="3" class="text-center text-gray-800 dark:text-gray-200 py-2">Total Skor</td>
+                            <td class="text-center text-gray-800 dark:text-gray-200 py-2">{{ $totalScore }}</td>
+                            <td class="text-center text-gray-800 dark:text-gray-200 py-2"></td>
                         </tr>
                     </tfoot>
                 </table>

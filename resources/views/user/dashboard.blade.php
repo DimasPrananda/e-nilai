@@ -8,92 +8,88 @@
             </div>
 
             <div class="flex flex-col md:flex-row md:gap-5">
-                <div class="flex-1 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-4">
-                    <div class="p-6">
-                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
-                            Top 3 Karyawan Terbaik
-                        </h3>
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full table-auto">
-                                <thead class="border bg-gray-200 dark:bg-gray-700 text-gray-600">
-                                    <tr>
-                                        <th class="px-2 md:px-0 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-700 dark:border-gray-300">No</th>
-                                        <th class="px-2 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-700 dark:border-gray-300">Nama</th>
-                                        <th class="px-2 md:px-0 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-700 dark:border-gray-300">Departemen</th>
-                                        <th class="px-2 md:px-0 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-700 dark:border-gray-300">Total Skor</th>
+                <div class="flex-1 bg-white p-5 dark:bg-gray-800 sm:rounded-lg mb-4">
+                    <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200 mb-4">
+                        Top 3 Karyawan Terbaik
+                    </h2>
+                    <div class="flex overflow-x-auto">
+                        <table class="flex-1">
+                            <thead class="border-b-2 text-gray-800 dark:text-gray-200">
+                                <tr>
+                                    <th class=" py-2 text-center">No</th>
+                                    <th class=" py-2 text-center">Nama</th>
+                                    <th class=" py-2 text-center">Departemen</th>
+                                    <th class=" py-2 text-center">Total Skor</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-800 dark:text-gray-200 dark:bg-gray-800 bg-white">
+                                @php $rank = 1; @endphp
+                                @foreach ($rankedScores->take(3) as $score)
+                                    <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors duration-200 cursor-pointer">
+                                        <td class="py-2 "># {{ $rank++ }}</td>
+                                        <td class="py-2 text-left">{{ $score->employee->name }}</td>
+                                        <td class="py-2 text-center">{{ $score->employee->department->name }}</td>
+                                        <td class="py-2 text-center">
+                                            @php
+                                                $finalScore = $score->score * 100;
+                                            @endphp
+                                            {{ $finalScore == round($finalScore) ? round($finalScore) : number_format($finalScore, 2) }}
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody class="border border-t-0 text-gray-600 dark:text-gray-300 text-xs font-light">
-                                    @php $rank = 1; @endphp
-                                    @foreach ($rankedScores->take(3) as $score)
-                                        <tr class="border-b border-gray-200 dark:border-gray-700 last:border-b-0 hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors duration-200 cursor-pointer">
-                                            <td class="px-2 md:px-0 py-4 whitespace-no-wrap border-r border-gray-700 dark:border-gray-300 text-center text-xs font-medium text-gray-700 dark:text-gray-300"># {{ $rank++ }}</td>
-                                            <td class="px-2 py-4 whitespace-no-wrap border-r border-gray-700 dark:border-gray-300 text-left text-xs font-medium text-gray-700 dark:text-gray-300">{{ $score->employee->name }}</td>
-                                            <td class="px-2 md:px-0 py-4 whitespace-no-wrap border-r border-gray-700 dark:border-gray-300 text-center text-xs font-medium text-gray-700 dark:text-gray-300">{{ $score->employee->department->name }}</td>
-                                            <td class="px-2 md:px-0 py-4 whitespace-no-wrap border-gray-700 dark:border-gray-300 text-center text-xs font-medium text-gray-700 dark:text-gray-300">
-                                                @php
-                                                    $finalScore = $score->score * 100;
-                                                @endphp
-                                                {{ $finalScore == round($finalScore) ? round($finalScore) : number_format($finalScore, 2) }}
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>    
-                    </div>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>    
                 </div>
 
-                <div class="flex-1 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-4">
-                    <div class="p-6">
-                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
-                            Top 3 {{ $employeeDepartment->name }}
-                        </h3>
-                        <div class="overflow-x-auto overflow-y-auto">
-                            <table class="min-w-full table-auto">
-                                <thead class="border bg-gray-200 dark:bg-gray-700 text-gray-600">
-                                    <tr>
-                                        <th class="px-2 md:px-0 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-700 dark:border-gray-300">No</th>
-                                        <th class="px-2 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-700 dark:border-gray-300">Nama</th>
-                                        <th class="px-2 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-700 dark:border-gray-300">Jabatan</th>
-                                        <th class="px-2 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-700 dark:border-gray-300">Total Skor</th>
+                <div class="flex-1 bg-white p-5 dark:bg-gray-800 sm:rounded-lg mb-4">
+                    <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200 mb-4">
+                        Top 3 {{ $employeeDepartment->name }}
+                    </h2>
+                    <div class="overflow-x-auto flex">
+                        <table class="flex-1">
+                            <thead class="border-b-2 text-gray-800 dark:text-gray-200">
+                                <tr>
+                                    <th class=" py-2 text-center ">No</th>
+                                    <th class=" py-2 text-center ">Nama</th>
+                                    <th class=" py-2 text-center ">Jabatan</th>
+                                    <th class=" py-2 text-center ">Total Skor</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-800 dark:text-gray-200 dark:bg-gray-800 bg-white">
+                                @php $rank = 1; @endphp
+                                @foreach ($departmentScores->take(3) as $total_score)
+                                    <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors duration-200 cursor-pointer">
+                                        <td class=" py-2 text-center "># {{ $rank++ }}</td>
+                                        <td class=" py-2 text-left ">{{ $total_score->employee->name }}</td>
+                                        <td class=" py-2 text-center ">{{ $total_score->employee->position->name }}</td>
+                                        <td class=" py-2 text-center ">
+                                            @php
+                                                $finalScore = $total_score->total_score;
+                                            @endphp
+                                            {{ $finalScore == round($finalScore) ? round($finalScore) : number_format($finalScore, 2) }}
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody class="border border-t-0 text-gray-600 dark:text-gray-300 text-xs font-light">
-                                    @php $rank = 1; @endphp
-                                    @foreach ($departmentScores->take(3) as $total_score)
-                                        <tr class="border-b border-gray-200 dark:border-gray-700 last:border-b-0 hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors duration-200 cursor-pointer">
-                                            <td class="px-2 md:px-0 py-4 whitespace-no-wrap border-r border-gray-700 dark:border-gray-300 text-center text-xs font-medium text-gray-700 dark:text-gray-300"># {{ $rank++ }}</td>
-                                            <td class="px-2 py-4 whitespace-no-wrap border-r border-gray-700 dark:border-gray-300 text-left text-xs font-medium text-gray-700 dark:text-gray-300">{{ $total_score->employee->name }}</td>
-                                            <td class="px-2 py-4 whitespace-no-wrap border-r border-gray-700 dark:border-gray-300 text-center text-xs font-medium text-gray-700 dark:text-gray-300">{{ $total_score->employee->position->name }}</td>
-                                            <td class="px-2 py-4 whitespace-no-wrap border-gray-700 dark:border-gray-300 text-center text-xs font-medium text-gray-700 dark:text-gray-300">
-                                                @php
-                                                    $finalScore = $total_score->total_score;
-                                                @endphp
-                                                {{ $finalScore == round($finalScore) ? round($finalScore) : number_format($finalScore, 2) }}
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
 
             <div class="mb-4 p-6 bg-white dark:bg-gray-800 shadow-md rounded-lg">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Perkembangan Skor Karyawan</h3>
+                <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200 mb-4">Perkembangan Skor Karyawan</h2>
                 <canvas id="scoreChart"></canvas>
             </div>
 
             <div class="mb-4">
                 <div class="flex-1 p-4 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 border-b overflow-hidden shadow-sm sm:rounded-lg sm:rounded-b-none sm:mb-0">
-                    <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Komentar</h3>
+                    <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200 mb-4">Komentar</h3>
                 </div>
                 <div class="flex-1 p-4 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg sm:rounded-t-none sm:mb-0">
                     <form action="{{ route('comments.store') }}" method="POST" class="mb-4 flex flex-col">
                         @csrf
-                        <h2 class="text-xl text-center font-medium text-gray-900 dark:text-gray-100">Berapa rating penilaian ini?</h2>
+                        <h2 class=" text-center text-xl font-bold text-gray-800 dark:text-gray-200 mb-4">Berapa rating penilaian ini?</h2>
                         <div class="flex justify-center mt-2">
                             <div class="flex text-4xl" id="rating-stars">
                                 <input type="radio" id="star1" name="rating" value="1" class="hidden" />

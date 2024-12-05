@@ -20,9 +20,28 @@ class GolonganController extends Controller
             $query->where('position_id', $request->input('position_id'));
         }
 
-        $golongans = $query->get();
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->input('search') . '%');
+        }
+
+        $entriesPerPage = $request->input('entries_per_page', 10);
+
+        $golongans = $query->paginate($entriesPerPage);
+
+        if ($request->ajax()) {
+            // Render the HTML part and pagination links separately
+            $html = view('admin.golongans-list', compact('positions', 'golongans'))->render();
+            $paginationLinks = $golongans->appends(request()->query())->links()->render();
+
+            return response()->json([
+                'html' => $html,
+                'pagination' => $paginationLinks,
+            ]);
+        }
+
         return view('admin.golongans', compact('positions', 'golongans'));
     }
+
 
     /**
      * Show the form for creating a new resource.

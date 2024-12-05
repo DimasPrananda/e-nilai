@@ -1,58 +1,49 @@
 <x-app-layout>
-    <div class="p-4 md:p-12 flex-1 w-screen md:w-full">
-        <div class="container mx-auto p-4">
-            <div class="flex justify-between items-center mb-4">
-                <a href="{{ route('admin.ranking.select-periods') }}" class="inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-md shadow">
-                    &larr; Kembali
-                </a>
-            </div>
-            <h1 class="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">{{ $selectedPeriod->period }}</h1>
+    <div class="p-4 md:p-12 flex-1 w-screen md:w-full" x-data="{ open: false }">
+        <div class="md:p-0 mb-4">
+            <h1 class="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">Kelola Data Penilaian Karyawan Terbaik</h1>
+            <a href="{{ route('admin.dashboard') }}" class="text-gray-800 dark:text-gray-400 hover:dark:text-gray-200 hover:text-black">Dashboard </a>
+            <a href="{{ route('admin.ranking.select-periods') }}"class="text-gray-800 dark:text-gray-400 hover:dark:text-gray-200 hover:text-black">/ {{ $selectedPeriod->period }}</a>
+            <a class="text-gray-800 dark:text-gray-200 font-bold ">/ Kelola Data Penilaian Karyawan Terbaik</a>
+        </div> 
 
-            <!-- Tabel Data Karyawan Belum Dinilai -->
-            <h2 class="text-xl font-bold mt-8 text-gray-800 dark:text-gray-200">Rekomendasi Karyawan Dengan Skor Tertinggi</h2>
-            <div class=" overflow-x-auto w-full">
-                <table class="min-w-full mt-4">
-                    <thead class=" border border-b-0 bg-gray-100 dark:bg-gray-800">
+        <div class="flex flex-col bg-white p-5 dark:bg-gray-800 sm:rounded-lg mb-4" x-show="open" x-transition>
+            <h2 class=" text-xl font-bold text-gray-800 dark:text-gray-200 mb-4">Data Karyawan Terbaik Departemen</h2>
+            <div class="flex overflow-x-auto">
+                <table class="flex-1">
+                    <thead class=" border-b-2 text-gray-800 dark:text-gray-200">
                         <tr>
-                            <th class="px-3 md:px-0 py-3 text-center text-xs border-r font-semibold text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">
-                                NO
-                            </th>
-                            <th class="px-6 py-3 text-center text-xs border-r font-semibold text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">
+                            <th class="px-6 py-3 text-center">
                                 Nama Karyawan
                             </th>
-                            <th class="px-6 py-3 text-center text-xs border-r font-semibold text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">
+                            <th class="px-6 py-3 text-center">
                                 Departemen
                             </th>
-                            <th class="px-6 py-3 text-center text-xs border-r font-semibold text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">
+                            <th class="px-6 py-3 text-center">
                                 Total Skor
                             </th>
-                            <th class="px-6 py-3 text-center text-xs font-semibold text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-300 dark:border-gray-700">
+                            <th class="px-6 py-3 text-center">
                                 Aksi
                             </th>
                         </tr>
                     </thead>
-                    <tbody class="border border-t-0 bg-white dark:bg-gray-900">
+                    <tbody class="text-gray-800 dark:text-gray-200 dark:bg-gray-800 bg-white">
                         @foreach($unassessedEmployees as $department)
                             @foreach($department->employees as $index => $employee)
-                                <tr class="border-b border-gray-200 dark:border-gray-700 last:border-b-0 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200">
-                                    <td class="py-4 text-center text-sm border-r text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700">
-                                        {{ ($loop->parent->index * $loop->count) + $loop->iteration }} .
-                                    </td>
-                                    <td class="px-6 py-4 text-sm border-r text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700">
+                                <tr class="border-b border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200">
+                                    <td class="px-6 py-4">
                                         {{ $employee->name }}
                                     </td>
-                                    <td class="px-6 py-4 text-sm border-r text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700">
+                                    <td class="px-6 py-4">
                                         {{ $department->name }}
                                     </td>
-                                    <td class="px-6 py-4 text-center text-sm border-r text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700">
+                                    <td class="px-6 py-4 text-center">
                                         {{ $employee->total_score ?? 'N/A' }}
                                     </td>
-                                    <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700">
+                                    <td class="px-6 py-4 text-center">
                                         <a href="{{ route('rankings.subcriteriaEvaluation', ['employee' => $employee->id, 'period' => $selectedPeriod->id]) }}" 
-                                           class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full shadow-lg transition transform hover:-translate-y-1 hover:shadow-xl duration-200 ease-in-out flex items-center justify-center space-x-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                                <path d="M10 3a1 1 0 00-1 1v3.586l-.293-.293a1 1 0 00-1.414 0L5 8.586l-1.293-1.293a1 1 0 00-1.414 0l-2 2a1 1 0 000 1.414L4 13.414l1.293-1.293a1 1 0 011.414 0L8 13.414l.293-.293a1 1 0 011.414 0L10 12.586V17a1 1 0 102 0v-4.414l.293.293a1 1 0 001.414 0L15 12.586l1.293 1.293a1 1 0 001.414 0l2-2a1 1 0 000-1.414L16 8.586l-1.293 1.293a1 1 0 01-1.414 0L12 8.586l-.293.293a1 1 0 01-1.414 0L10 8.586V4a1 1 0 00-1-1z"/>
-                                            </svg>
+                                           class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-lg transition transform hover:-translate-y-1 hover:shadow-xl duration-200 ease-in-out flex items-center justify-center space-x-2">
+                                           <i class="fas fa-edit"></i>
                                             <span>Nilai</span>
                                         </a>
                                     </td>
@@ -61,28 +52,37 @@
                         @endforeach
                     </tbody>
                 </table>       
-            </div>             
+            </div>    
+        </div>
 
-            <!-- Tabel Data Karyawan Sudah Dinilai -->
-            <h2 class="text-xl font-bold mt-8 text-gray-800 dark:text-gray-200">Karyawan Sudah Dinilai</h2>
-            <div class=" overflow-x-auto w-full">
-                <table class="min-w-full mt-4">
-                    <thead class=" border border-b-0 bg-gray-100 dark:bg-gray-800">
+        <div class="flex flex-col bg-white p-5 dark:bg-gray-800 sm:rounded-lg">
+            <div class="flex flex-1 justify-between items-center mb-4">
+                <h2 class=" text-xl font-bold text-gray-800 dark:text-gray-200">Data Karyawan Terbaik</h2>
+                <button @click="open = !open" class="flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    <svg class="w-4 h-4 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
+                    </svg>
+                    <span x-text="open ? 'Tutup' : 'Tambah'"></span>
+                </button>
+            </div>
+            <div class="flex overflow-x-auto">
+                <table class="flex-1">
+                    <thead class=" border-b-2 text-gray-800 dark:text-gray-200">
                         <tr>
-                            <th class="px-3 md:px-0 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">No</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">Nama Karyawan</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">Departemen</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-r border-gray-300 dark:border-gray-700">Total Nilai</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-800 dark:text-gray-300 uppercase tracking-wider border-gray-700 dark:border-gray-300">Aksi</th>
+                            <th class=" text-center py-2">No</th>
+                            <th class=" text-center py-2">Nama Karyawan</th>
+                            <th class=" text-center py-2">Departemen</th>
+                            <th class=" text-center py-2">Total Nilai</th>
+                            <th class=" text-center py-2">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody class="border border-t-0 bg-white dark:bg-gray-900">
+                    <tbody class="text-gray-800 dark:text-gray-200 dark:bg-gray-800 bg-white">
                         @forelse($assessedEmployees as $index => $employee)
-                            <tr class="border-b border-gray-300 dark:border-gray-700 last:border-b-0 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200">
-                                <td class="py-4 whitespace-no-wrap text-center text-sm leading-4 font-medium border-r border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300">{{ $loop->iteration }} .</td>
-                                <td class="px-6 py-4 whitespace-no-wrap text-left text-sm leading-4 font-medium border-r border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300">{{ $employee->name }}</td>
-                                <td class="px-6 py-4 whitespace-no-wrap text-center text-sm leading-4 font-medium border-r border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300">{{ $employee->department->name }}</td>
-                                <td class="px-6 py-4 whitespace-no-wrap text-center text-sm leading-4 font-medium border-r border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300">
+                            <tr class="border-b border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200">
+                                <td class=" text-center py-2">{{ $loop->iteration }} .</td>
+                                <td class=" text-left py-2 ">{{ $employee->name }}</td>
+                                <td class=" text-center py-2">{{ $employee->department->name }}</td>
+                                <td class=" text-center py-2">
                                     {{ number_format($employee->total_score * 100, 2) }}
                                 </td>
                                 <td class="flex justify-center space-x-2 px-6 py-4 whitespace-no-wrap text-center text-sm leading-4 font-medium text-gray-700 dark:text-gray-300">
@@ -110,12 +110,12 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">Tidak ada karyawan yang sudah dinilai di periode ini.</td>
+                                <td colspan="5" class="py-2 text-center">Tidak ada karyawan yang sudah dinilai di periode ini.</td>
                             </tr>
                         @endforelse
                     </tbody>
                 </table> 
-            </div>               
+            </div>              
         </div>
     </div>
 </x-app-layout>

@@ -25,6 +25,7 @@ class EvaluationController extends Controller
         $departmentId = $request->input('department_id') ?? session('last_department_id', Department::first()->id);
         $search = $request->input('search');
         $selectedPeriod = Period::find($periodId);
+        $entriesPerPage = $request->input('entries_per_page', 10); // default to 10 per page
 
         if (!$selectedPeriod) {
             abort(404, 'Period not found');
@@ -32,74 +33,92 @@ class EvaluationController extends Controller
 
         session(['last_department_id' => $departmentId]);
 
-        // Mengambil daftar karyawan yang sudah dinilai di periode yang dipilih
-        $assessedEmployees = Employee::whereHas('totalScores', function($query) use ($periodId) {
+        // Calculate total score of all employees in the department before pagination
+        $allEmployeesInDept = Employee::whereHas('totalScores', function ($query) use ($periodId) {
             $query->where('period_id', $periodId);
-        });
+        })
+            ->when($departmentId, function ($query) use ($departmentId) {
+                return $query->where('department_id', $departmentId);
+            })
+            ->get();
 
-        // Mengambil daftar karyawan yang belum dinilai di periode yang dipilih
-        $unassessedEmployees = Employee::whereDoesntHave('totalScores', function($query) use ($periodId) {
-            $query->where('period_id', $periodId);
-        });
-
-        // Filter berdasarkan departemen jika dipilih
-        if ($departmentId) {
-            $assessedEmployees->where('department_id', $departmentId);
-            $unassessedEmployees->where('department_id', $departmentId);
-        }
-
-        if ($search) {
-            $assessedEmployees->where('name', 'like', '%' . $search . '%');
-            $unassessedEmployees->where('name', 'like', '%' . $search . '%');
-        }    
-
-        // Mengambil data karyawan yang sudah dinilai
-        $assessedEmployees = $assessedEmployees->get();
-
-        // Mengambil data karyawan yang belum dinilai
-        $unassessedEmployees = $unassessedEmployees->get();
-
-        // Mengambil daftar departemen untuk filter
-        $departments = Department::all();
-
-        // Menghitung total skor semua karyawan dalam departemen dan periode yang sama
-        $totalDepartmentScores = [];
-
-        foreach ($assessedEmployees as $employee) {
-            $totalScore = Evaluation::where('employee_id', $employee->id)
+        $totalDepartmentScore = $allEmployeesInDept->reduce(function ($carry, $employee) use ($periodId) {
+            $employeeTotalScore = Evaluation::where('employee_id', $employee->id)
                 ->where('period_id', $periodId)
                 ->sum('score');
+            return $carry + $employeeTotalScore;
+        }, 0);
 
-            $employee->totalScore = $totalScore;
+        // Query for assessed employees, paginated
+        $assessedEmployees = Employee::whereHas('totalScores', function ($query) use ($periodId) {
+            $query->where('period_id', $periodId);
+        })
+            ->when($departmentId, function ($query) use ($departmentId) {
+                return $query->where('department_id', $departmentId);
+            })
+            ->when($search, function ($query) use ($search) {
+                return $query->where('name', 'like', '%' . $search . '%');
+            })
+            ->with('totalScores') // Eager load for better performance
+            ->paginate($entriesPerPage);
 
-            // Menghitung total skor per departemen
-            if (!isset($totalDepartmentScores[$employee->department_id])) {
-                $totalDepartmentScores[$employee->department_id] = 0;
-            }
-            $totalDepartmentScores[$employee->department_id] += $totalScore;
-        }   
-
-        // Menghitung skor relatif setiap karyawan berdasarkan total skor departemen
         foreach ($assessedEmployees as $employee) {
-            $departmentTotalScore = $totalDepartmentScores[$employee->department_id];
-            $employee->relativeScore = $departmentTotalScore > 0 ? ($employee->totalScore / $departmentTotalScore) * 100 : 0;
+            $employee->totalScore = Evaluation::where('employee_id', $employee->id)
+                ->where('period_id', $periodId)
+                ->sum('score');
+            $employee->relativeScore = $totalDepartmentScore > 0 ? ($employee->totalScore / $totalDepartmentScore) * 100 : 0;
         }
 
-        $assessedEmployees = $assessedEmployees->sortByDesc('totalScore');
+        // Pagination for unassessed employees
+        $unassessedEmployees = Employee::whereDoesntHave('totalScores', function ($query) use ($periodId) {
+            $query->where('period_id', $periodId);
+        })
+            ->when($departmentId, function ($query) use ($departmentId) {
+                return $query->where('department_id', $departmentId);
+            })
+            ->when($search, function ($query) use ($search) {
+                return $query->where('name', 'like', '%' . $search . '%');
+            })
+            ->paginate($entriesPerPage);
 
-        $assessedEmployees = $assessedEmployees->values(); 
-        foreach ($assessedEmployees as $index => $employee) {
-            $employee->index = $index + 1;
+        $departments = Department::all();
+
+        // AJAX response for pagination
+        if ($request->ajax()) {
+            $html = view('admin.penilaian.employees-list', compact(
+                'assessedEmployees',
+                'unassessedEmployees',
+                'departments',
+                'selectedPeriod',
+                'departmentId'
+            ))->render();
+
+            $paginationLinks = $assessedEmployees->links()->render();
+
+            return response()->json([
+                'html' => $html,
+                'pagination' => $paginationLinks,
+            ]);
         }
 
-        return view('admin.penilaian.table', compact('assessedEmployees', 'unassessedEmployees', 'selectedPeriod', 'departments', 'departmentId'));
+        return view('admin.penilaian.table', compact(
+            'assessedEmployees',
+            'unassessedEmployees',
+            'selectedPeriod',
+            'departments',
+            'departmentId'
+        ))->with([
+            'currentPage' => $assessedEmployees->currentPage(),
+            'perPage' => $assessedEmployees->perPage(),
+        ]);;
     }
+
 
     public function showLatestPeriod()
     {
         // Ambil periode terbaru
         $latestPeriod = Period::latest()->first();
-    
+
         // Redirect ke halaman penilaian untuk periode terbaru
         return redirect()->route('periods.showEmployee', ['period_id' => $latestPeriod->id]);
     }
@@ -108,20 +127,20 @@ class EvaluationController extends Controller
     {
         // Find and delete all scores for the employee in the given period
         $deleted = Evaluation::where('employee_id', $employeeId)
-                    ->where('period_id', $periodId)
-                    ->delete();
+            ->where('period_id', $periodId)
+            ->delete();
 
         if ($deleted) {
             // Also delete total score record if necessary
             TotalScore::where('employee_id', $employeeId)
-                    ->where('period_id', $periodId)
-                    ->delete();
+                ->where('period_id', $periodId)
+                ->delete();
 
             return redirect()->route('periods.showEmployee', ['period_id' => $periodId])
-                            ->with('success', 'Nilai berhasil dihapus.');
+                ->with('success', 'Nilai berhasil dihapus.');
         } else {
             return redirect()->route('periods.showEmployee', ['period_id' => $periodId])
-                            ->with('error', 'Gagal menghapus nilai.');
+                ->with('error', 'Gagal menghapus nilai.');
         }
     }
 
@@ -129,11 +148,11 @@ class EvaluationController extends Controller
     {
         $employee = Employee::findOrFail($employeeId);
         $period = Period::findOrFail($periodId);
-        
+
         $subcriterias = SubCriteria::with(['criteria'])
-                        ->get()
-                        ->groupBy('criteria.name'); // Kelompokkan berdasarkan nama kriteria
-    
+            ->get()
+            ->groupBy('criteria.name'); // Kelompokkan berdasarkan nama kriteria
+
         return view('admin.penilaian.evaluate', compact('employee', 'period', 'subcriterias'));
     }
 
@@ -141,11 +160,11 @@ class EvaluationController extends Controller
     {
         $request->validate([
             'scores' => 'required|array',
-            'scores.*' => 'required|numeric|min:0|max:100' 
+            'scores.*' => 'required|numeric|min:0|max:100'
         ]);
-    
+
         $totalScore = 0;
-    
+
         foreach ($request->scores as $subcriteriaId => $score) {
             $subcriteria = SubCriteria::findOrFail($subcriteriaId);
             $evaluation = Evaluation::updateOrCreate(
@@ -158,12 +177,12 @@ class EvaluationController extends Controller
                     'score' => $score,
                     'subcriteria_snapshot' => json_encode($subcriteria)
                 ]
-                
+
             );
-    
+
             $totalScore += $score;
         }
-    
+
         TotalScore::updateOrCreate(
             [
                 'employee_id' => $employeeId,
@@ -171,7 +190,7 @@ class EvaluationController extends Controller
             ],
             ['total_score' => $totalScore]
         );
-    
+
         return redirect()->route('periods.showEmployee', ['period_id' => $periodId])
             ->with('success', 'Penilaian berhasil disimpan dan total skor diperbarui.');
     }
@@ -183,13 +202,13 @@ class EvaluationController extends Controller
 
         if (!$employee || !$period) {
             return redirect()->route('periods.showEmployee', ['period_id' => $periodId])
-                            ->with('error', 'Karyawan atau periode tidak ditemukan.');
+                ->with('error', 'Karyawan atau periode tidak ditemukan.');
         }
 
         $subcriterias = SubCriteria::all(); // Mendapatkan semua subkriteria
         $scores = Evaluation::where('employee_id', $employeeId)
-                    ->where('period_id', $periodId)
-                    ->pluck('score', 'subcriteria_id'); // Mendapatkan skor saat ini
+            ->where('period_id', $periodId)
+            ->pluck('score', 'subcriteria_id'); // Mendapatkan skor saat ini
 
         return view('admin.penilaian.edit', compact('employee', 'period', 'subcriterias', 'scores'));
     }
@@ -210,8 +229,8 @@ class EvaluationController extends Controller
 
         // Update total score
         $totalScore = Evaluation::where('employee_id', $employeeId)
-                                ->where('period_id', $periodId)
-                                ->sum('score');
+            ->where('period_id', $periodId)
+            ->sum('score');
 
         TotalScore::updateOrCreate(
             ['employee_id' => $employeeId, 'period_id' => $periodId],
@@ -219,17 +238,18 @@ class EvaluationController extends Controller
         );
 
         return redirect()->route('periods.showEmployee', ['period_id' => $periodId])
-                        ->with('success', 'Nilai berhasil diperbarui.');
+            ->with('success', 'Nilai berhasil diperbarui.');
     }
 
     public function showDetail($employeeId, $periodId)
     {
         $employee = Employee::find($employeeId);
         $period = Period::find($periodId);
+        $selectedPeriod = Period::find($periodId);
 
         if (!$employee || !$period) {
             return redirect()->route('periods.showEmployee', ['period_id' => $periodId])
-                            ->with('error', 'Karyawan atau periode tidak ditemukan.');
+                ->with('error', 'Karyawan atau periode tidak ditemukan.');
         }
 
         // Mendapatkan semua kriteria dan subkriteria
@@ -237,10 +257,10 @@ class EvaluationController extends Controller
 
         // Mendapatkan nilai evaluasi
         $scores = Evaluation::where('employee_id', $employeeId)
-                    ->where('period_id', $periodId)
-                    ->pluck('score', 'subcriteria_id')
-                    ->toArray();
+            ->where('period_id', $periodId)
+            ->pluck('score', 'subcriteria_id')
+            ->toArray();
 
-        return view('admin.penilaian.detail', compact('employee', 'period', 'criterias', 'scores'));    
+        return view('admin.penilaian.detail', compact('employee', 'selectedPeriod', 'period', 'criterias', 'scores'));
     }
 }

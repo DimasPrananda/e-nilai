@@ -15,13 +15,13 @@
             Route::is('admin.ranking.subcriterias') ||
             Route::is('admin.ranking.select-periods')
         ? 'true' : 'false' }}
-    }" class="fixed h-screen w-64 p-4 bg-gray-800 text-white ">
+    }" class="h-full w-64 p-4 bg-white dark:bg-gray-800 text-white ">
         <nav>
             <ul>
                 <!-- Dashboard Menu Item -->
                 <li>
                     <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
-                        <div class="flex justify-between items-center">
+                        <div class="flex justify-between items-center text-gray-800 dark:text-white">
                             <svg class="w-4 h-4 ml-1 mr-2" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
                             </svg>
@@ -31,8 +31,8 @@
                 </li>
     
                 <!-- Perusahaan Menu with Submenu -->
-                <li class="px-4 py-2 hover:bg-gray-700" @click="openSubmenu = !openSubmenu">
-                    <div class="flex justify-between items-center cursor-pointer">
+                <li class="px-4 py-2 hover:bg-gray-200 hover:dark:bg-gray-700" @click="openSubmenu = !openSubmenu">
+                    <div class="flex justify-between text-gray-800 dark:text-white items-center cursor-pointer">
                         <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 2L2 7v14h6v-7h8v7h6V7L12 2zm0 2.2l7 3.8v10h-2v-4H7v4H5v-10l7-3.8zM11 10v2h2v-2h-2zm0 4v2h2v-2h-2zm4-4v2h2v-2h-2zm0 4v2h2v-2h-2z"/>
                         </svg>
@@ -43,7 +43,7 @@
                     </div>
                 </li>
     
-                <ul x-show="openSubmenu" x-cloak class="pl-8 relative"><div class="absolute inset-y-0 w-1 border-l-2 border-dashed border-gray-300 dark:border-gray-600"></div>
+                <ul x-show="openSubmenu" x-cloak class="pl-8 relative"><div class="absolute inset-y-0 w-1 border-l-2 border-dashed text-gray-800 dark:text-white border-gray-300 dark:border-gray-600"></div>
                     <li>
                         <x-nav-link :href="route('admin.departments')" :active="request()->routeIs('admin.departments')">
                             Departemen
@@ -62,8 +62,8 @@
                 </ul>
             
                 <!-- Karyawan Menu with Submenu -->
-                <li class="px-4 py-2 hover:bg-gray-700" @click="openEmployeeSubmenu = !openEmployeeSubmenu">
-                    <div class="flex items-center cursor-pointer">
+                <li class="px-4 py-2 hover:bg-gray-200 hover:dark:bg-gray-700" @click="openEmployeeSubmenu = !openEmployeeSubmenu">
+                    <div class="flex items-center cursor-pointer text-gray-800 dark:text-white">
                         <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-3.32 0-6 2.68-6 6v2h12v-2c0-3.32-2.68-6-6-6zm6-4c0 3.31-2.69 6-6 6s-6-2.69-6-6S8.69 4 12 4s6 2.69 6 6z"/>
                         </svg>
@@ -85,8 +85,8 @@
                 </ul>
             
             <!-- Penilaian Menu with Submenu -->
-                <li class="px-4 py-2 hover:bg-gray-700" @click="openEvaluationSubmenu = !openEvaluationSubmenu">
-                    <div class="flex items-center cursor-pointer">
+                <li class="px-4 py-2 hover:bg-gray-200 hover:dark:bg-gray-700" @click="openEvaluationSubmenu = !openEvaluationSubmenu">
+                    <div class="flex items-center text-gray-800 dark:text-white cursor-pointer">
                         <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M9 11l-2-2-1.5 1.5L9 14l7-7-1.5-1.5L9 11zm-7-9h18v18H2V2zm16 16V4H4v14h14z"/>
                         </svg>
@@ -122,8 +122,8 @@
                     </li>
                 </ul>
                 
-                <li class="px-4 py-2 hover:bg-gray-700" @click="openRankingSubmenu = !openRankingSubmenu">
-                    <div class="flex items-center cursor-pointer">
+                <li class="px-4 py-2 hover:bg-gray-200 hover:dark:bg-gray-700" @click="openRankingSubmenu = !openRankingSubmenu">
+                    <div class="flex items-center text-gray-800 dark:text-white cursor-pointer">
                         <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-3.32 0-6 2.68-6 6v2h12v-2c0-3.32-2.68-6-6-6zm6-4c0 3.31-2.69 6-6 6s-6-2.69-6-6S8.69 4 12 4s6 2.69 6 6z"/>
                         </svg>
@@ -223,7 +223,7 @@
 <div class="hidden md:block">
     <div x-data="{ 
         openEvaluationSubmenu: {{ Route::is('user.select-periods') ? 'true' : 'false' }},
-    }" class="fixed h-screen w-64 p-4 bg-gray-800 text-white ">
+    }" class="h-full w-64 p-4 bg-white dark:bg-gray-800 text-white ">
         <nav>
             <ul>
                 <!-- Dashboard Menu Item -->

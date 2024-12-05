@@ -20,7 +20,24 @@ class RankingSubcriteriaController extends Controller
             $query->where('ranking_criteria_id', $request->input('ranking_criteria_id'));
         }
 
-        $ranking_subcriterias = $query->get();
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->input('search') . '%');
+        }
+
+        $entriesPerPage = $request->input('entries_per_page', 10); 
+
+        $ranking_subcriterias = $query->paginate($entriesPerPage);
+
+        if ($request->ajax()) {
+            $html = view('admin.ranking.subcriterias-list', compact('ranking_criterias', 'ranking_subcriterias'))->render();
+            $paginationLinks = $ranking_subcriterias->appends(request()->query())->links()->render();
+
+            return response()->json([
+                'html' => $html,
+                'pagination' => $paginationLinks,
+            ]);
+        }
+
         return view('admin.ranking.subcriterias', compact('ranking_criterias', 'ranking_subcriterias'));
     }
 

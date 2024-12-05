@@ -23,6 +23,7 @@ class UserController extends Controller
         // Mengambil nama pengguna yang sedang login
         $userName = Auth::user()->name;
         $period = Period::find($periodId);
+        $selectedPeriod = Period::find($periodId);
     
         if (!$period) {
             return redirect()->route('user.select-periods')
@@ -46,6 +47,6 @@ class UserController extends Controller
                             ->pluck('score', 'subcriteria_id')
                             ->toArray();
     
-        return view('user.detail', compact('employee', 'period', 'criterias', 'scores'));
+        return view('user.detail', compact('employee', 'selectedPeriod', 'period', 'criterias', 'scores'));
     }
 }

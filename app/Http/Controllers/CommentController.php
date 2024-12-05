@@ -13,6 +13,12 @@ class CommentController extends Controller
         $request->validate([
             'text' => 'required|string|max:500',
             'rating' => 'required|integer|min:1|max:5',
+        ],[
+            'rating.required' => 'Rating harus dipilih.',
+            'rating.integer' => 'Rating tidak valid.',
+            'rating.min' => 'Rating tidak valid.',
+            'rating.max' => 'Rating tidak valid.',
+            'text.required' => 'Komentar harus diisi.',
         ]);
 
         Comment::create([
